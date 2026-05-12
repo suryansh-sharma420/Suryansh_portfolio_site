@@ -14,8 +14,17 @@ const ModeContext = createContext<ModeContextType | undefined>(undefined);
 export function ModeProvider({ children }: { children: React.ReactNode }) {
   const [mode, setMode] = useState<Mode>('executive');
 
+  useEffect(() => {
+    const saved = localStorage.getItem('portfolio-mode') as Mode | null;
+    if (saved === 'technical' || saved === 'executive') setMode(saved);
+  }, []);
+
   const toggleMode = () => {
-    setMode((prev) => (prev === 'executive' ? 'technical' : 'executive'));
+    setMode((prev) => {
+      const next = prev === 'executive' ? 'technical' : 'executive';
+      localStorage.setItem('portfolio-mode', next);
+      return next;
+    });
   };
 
   useEffect(() => {

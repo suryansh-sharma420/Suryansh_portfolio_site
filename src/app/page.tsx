@@ -42,9 +42,9 @@ export default function Home() {
 
             <div className="space-y-10">
               <div className="flex flex-wrap gap-4 font-space-grotesk">
-                <button className="px-10 py-4 bg-primary-container text-on-primary font-bold uppercase tracking-widest text-xs glow-cyan hover:brightness-110 active:scale-95 transition-all">
+                <a href="/SURYANSH_SHARMA.pdf" target="_blank" rel="noopener noreferrer" className="px-10 py-4 bg-primary-container text-on-primary font-bold uppercase tracking-widest text-xs glow-cyan hover:brightness-110 active:scale-95 transition-all inline-block">
                   View_Resume
-                </button>
+                </a>
               </div>
 
               <div className="relative glass-panel p-1 border-primary-container/10">

@@ -7,182 +7,304 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { use } from 'react';
 
+type ProjectLabel = 'RESEARCH' | 'POC' | 'IDEATION' | 'ACTIVE';
+
 interface ProjectDetail {
   title: string;
   id: string;
   category: string;
   status: string;
-  metrics: { label: string; value: string }[];
+  tier: 1 | 2;
+  label?: ProjectLabel;
+  githubUrl?: string;
   stack: string[];
+  metrics?: { label: string; value: string }[];
   description: {
     technical: string[];
     executive: string[];
   };
-  codeInsight?: {
-    file: string;
-    content: string;
-  };
+  learned?: string[];
+  codeInsight?: { file: string; content: string };
   icon: string;
 }
 
+const LABEL_STYLES: Record<ProjectLabel, string> = {
+  RESEARCH: 'text-purple-400 border-purple-400/30 bg-purple-400/5',
+  POC: 'text-yellow-400 border-yellow-400/30 bg-yellow-400/5',
+  IDEATION: 'text-outline border-outline/30 bg-outline/5',
+  ACTIVE: 'text-green-400 border-green-400/30 bg-green-400/5',
+};
+
 const PROJECT_DETAILS: Record<string, ProjectDetail> = {
-  'red-teaming-platform': {
-    id: '0x8FA2',
-    title: 'LLM Red Teaming & Eval Platform',
-    category: 'AI Safety / Security',
-    status: 'Operational',
-    icon: 'security',
+  // ── TIER 1 ──────────────────────────────────────────────────────────────
+  'zorvyn': {
+    id: '0xZ001',
+    title: 'Zorvyn — Financial Backend',
+    category: 'Backend Systems',
+    status: 'Production-Ready',
+    tier: 1,
+    icon: 'account_balance',
+    githubUrl: 'https://github.com/suryansh-sharma420/Finance-Data-Processing-and-Access-Control-Backend',
+    stack: ['FastAPI', 'Pydantic', 'SQLAlchemy', 'SQLite', 'JWT', 'Pytest', 'Streamlit'],
     metrics: [
-      { label: 'Coverage', value: '98%' },
-      { label: 'Latency', value: '< 200ms' }
+      { label: 'Test Coverage', value: '100%' },
+      { label: 'Auth', value: 'JWT + RBAC' },
+      { label: 'Roles', value: '3 (Admin / Analyst / Viewer)' },
+      { label: 'Analytics', value: 'MoM Growth, Savings Rate' },
     ],
-    stack: ['Garak', 'PromptFoo', 'FastAPI', 'LiteLLM', 'Groq', 'Python'],
     description: {
       technical: [
-        'Engineered an automated security testing pipeline integrating Garak and PromptFoo to simulate adversarial attacks including prompt injection, jailbreaking, and recursive encoding bypasses.',
-        'Developed a FastAPI orchestration layer to execute configuration-driven workflows, parsing complex evaluation runs into structured JSON vulnerability reports for security auditing.'
+        'Clean 3-layer architecture: API routes handle HTTP only, Services own business logic, Repositories own all DB queries. No logic bleeds between layers.',
+        'RBAC enforced at the dependency level — Admin has global access, Analyst gets read-only global visibility, Viewer is strictly isolated to their own records. JWT Bearer token validated and cross-referenced against the DB on every request.',
+        'Analytics engine computes Net Balance, Savings Rate %, and Month-over-Month Income/Expense Growth on-the-fly using SQLite strftime grouping — no pre-aggregated tables.',
+        '100% Pytest coverage using an in-memory StaticPool SQLite environment completely decoupled from the production database.',
       ],
       executive: [
-        'Built a comprehensive AI safety platform that automatically tests large language models for security flaws and harmful behaviors.',
-        'This system provides clear, actionable reports on where an AI might be vulnerable to malicious manipulation, ensuring enterprise-grade safety before deployment.'
-      ]
+        'A secure financial management API with three distinct user tiers: full-control admins, read-only analysts, and privacy-isolated viewers.',
+        'Automatically calculates financial trends — net balance, savings rate, and month-over-month growth — from raw transaction data without manual reporting.',
+        'Built with complete automated test coverage to ensure reliability at every layer.',
+      ],
     },
+    learned: [
+      'Enforcing strict layered architecture end-to-end — not just on paper',
+      'Full FastAPI + SQLAlchemy stack: routing, ORM, dependency injection',
+      'API design iteration using Swagger UI',
+      'Writing isolated Pytest suites with in-memory DB (StaticPool — no prod dependency)',
+    ],
     codeInsight: {
-      file: 'adversarial_runner.py',
-      content: 'def run_red_team(model_id, probes):\n  results = garak.scan(model_id, probes)\n  report = promptfoo.eval(results)\n  return format_vulnerability_report(report)'
-    }
+      file: 'dependencies.py',
+      content: `async def get_current_active_superuser(
+    current_user: User = Depends(get_current_user),
+) -> User:
+    if not current_user.is_superuser:
+        raise HTTPException(403, "Not enough permissions")
+    return current_user`,
+    },
   },
-  'billing-engine': {
-    id: '0xCC12',
-    title: 'Multi-Tenant Billing Engine',
-    category: 'Distributed Systems',
+
+  'sagepilot': {
+    id: '0xS002',
+    title: 'Sagepilot — AI Order Supervisor',
+    category: 'AI Agents',
     status: 'Stable',
-    icon: 'payments',
+    tier: 1,
+    icon: 'smart_toy',
+    githubUrl: 'https://github.com/suryansh-sharma420/AI_Supervisor',
+    stack: ['FastAPI', 'PostgreSQL', 'Alembic', 'Groq', 'Llama-3.3-70b', 'Llama-3.1-8b', 'asyncpg', 'React'],
     metrics: [
-      { label: 'Uptime', value: '99.99%' },
-      { label: 'Latency', value: '< 15ms' }
+      { label: 'Agent Model', value: 'Llama-3.3-70b' },
+      { label: 'Classifier', value: 'Llama-3.1-8b' },
+      { label: 'Pattern', value: 'Agent-per-Entity' },
+      { label: 'DB', value: 'PostgreSQL + Alembic' },
     ],
-    stack: ['FastAPI', 'PostgreSQL', 'Redis', 'Docker', 'JWT', 'Alembic'],
     description: {
       technical: [
-        'Built a high-throughput billing engine supporting Hybrid, Per-Trip, and Fixed models using the Strategy Pattern for decoupled logic.',
-        'Optimized persistence with connection pooling and raw SQL for high-load operations, supplemented by LRU caching to minimize database round-trips.'
+        'Each order spawns a dedicated autonomous supervisor agent running Llama-3.3-70b via Groq. The agent runs a persistent loop — watching for domain events (payment failure, shipment update, delivery confirmation) and deciding actions (notify team, create note, sleep until next check-in).',
+        'A lightweight Llama-3.1-8b classifier routes incoming events to the correct handler before the main agent processes them, reducing context overhead.',
+        'PostgreSQL + Alembic for schema migrations. asyncpg for async DB access. React frontend provides an order dashboard and agent activity log.',
       ],
       executive: [
-        'Developed a unified financial system capable of handling complex enterprise contracts and thousands of transactions per second.',
-        'The architecture ensures 100% accuracy in billing across different clients while maintaining high availability and rapid response times.'
-      ]
+        'Every customer order gets its own AI brain. It watches for problems — payment failures, delayed shipments, delivery issues — and keeps the right people informed automatically.',
+        'Built with two AI models working together: a fast classifier that identifies what type of event just happened, and a larger reasoning model that decides what to do about it.',
+        'Full web interface for monitoring order status and agent decisions in real time.',
+      ],
     },
+    learned: [
+      'Order lifecycle management in e-commerce systems',
+      'Job schedulers and long-running async agent loops',
+      'Test-driven development in practice',
+      'PostgreSQL connection + query optimization with asyncpg',
+      'Scaling considerations for agent-per-entity patterns',
+      'Context window optimization for LLM agents',
+    ],
     codeInsight: {
-      file: 'StrategyFactory.ts',
-      content: 'class BillingFactory {\n  static getModel(type: string) {\n    switch (type) {\n      case "per-trip": return new PerTripModel();\n      case "fixed": return new FixedModel();\n      default: throw new Error("Invalid type");\n    }\n  }\n}'
-    }
+      file: 'agent.py',
+      content: `async def run_supervisor(order_id: str):
+    while order.status != "completed":
+        event = await wait_for_event(order_id)
+        action = await llm.decide(event, context=order.history)
+        await execute(action)
+        await asyncio.sleep(action.next_check_in)`,
+    },
   },
-  'ai-pm-tool': {
-    id: '0x2B41',
-    title: 'AI Project Management Tool',
-    category: 'AI Systems Architecture',
-    status: 'Beta',
-    icon: 'account_tree',
-    metrics: [
-      { label: 'Efficiency', value: '+30%' },
-      { label: 'Drift_Detection', value: 'Real-time' }
-    ],
-    stack: ['Python', 'Llama-3', 'SQLAlchemy', 'Agentic', 'PostgreSQL', 'React'],
-    description: {
-      technical: [
-        'Engineered Generative AI pipelines for real-time "Scope Drift" auditing and predictive readiness scoring using Llama-3 and dynamic state synchronization.',
-        'Architected a secure, high-throughput API layer with robust relational models to orchestrate state transitions across the application lifecycle.'
-      ],
-      executive: [
-        'An intelligence layer for project managers that predicts delays and automatically flags when a project is moving away from its original goals.',
-        'Leverages advanced AI to synchronize team updates and provide a unified view of project health and resource allocation.'
-      ]
-    }
-  },
+
   'propaganda-detection': {
-    id: '0x992E',
+    id: '0xP003',
     title: 'Propaganda Detection Engine',
-    category: 'NLP Systems',
-    status: 'Research_Stable',
+    category: 'NLP / Research',
+    status: 'Research Complete',
+    tier: 1,
+    label: 'RESEARCH',
     icon: 'monitoring',
+    githubUrl: 'https://github.com/suryansh-sharma420/Propaganda-Detection-Project',
+    stack: ['PyTorch', 'XLM-RoBERTa', 'PEFT', 'LoRA', 'Hugging Face Transformers'],
     metrics: [
-      { label: 'Precision', value: '92%' },
-      { label: 'Class_Imbalance', value: '5.5:1' }
+      { label: 'Recall (Propaganda)', value: '75.3%' },
+      { label: 'Specificity', value: '100%' },
+      { label: 'Eval Sample', value: '185 verified' },
+      { label: 'Class Imbalance', value: '5.5 : 1' },
     ],
-    stack: ['PyTorch', 'XLM-RoBERTa', 'PEFT', 'LoRA', 'Hugging Face'],
     description: {
       technical: [
-        'Architected a Sequential Transfer Learning pipeline using XLM-RoBERTa to enable cross-lingual (English/Hindi) classification of manipulative text.',
-        'Mitigated a severe 5.5:1 class imbalance by engineering a custom PyTorch Focal Loss function and a synthetic data augmentation pipeline.'
+        'Sequential transfer learning pipeline: XLM-RoBERTa first trained on clean SemEval news articles, then domain-adaptive pretraining (DAPT) on noisy tweet corpus (HQP), then fine-tuned back on SemEval only. Clean-first approach produced significantly better generalization than training directly on tweets.',
+        'Severe 5.5:1 class imbalance mitigated with a custom PyTorch Focal Loss function — down-weights easy negatives, focuses training on hard propaganda examples.',
+        'Cross-lingual generalization: XLM-RoBERTa\'s multilingual pretraining enables EN/HI classification without separate Hindi training data.',
+        'Final model: 75.3% propaganda recall with zero false positives on 100 verified neutral samples — acts as a high-precision "Loaded Language Detector".',
       ],
       executive: [
-        'Advanced multilingual AI system designed to detect manipulative social media content across different languages with high precision.',
-        'The system uses cutting-edge language models to identify propaganda even when it is translated or subtly changed.'
-      ]
-    }
+        'AI system that detects manipulative and propaganda content in social media posts across English and Hindi.',
+        'Key insight: training on clean news articles first — before exposing the model to messy tweet data — produced far better results than training on tweets directly.',
+        'The model achieves zero false positives on neutral content, meaning it only flags something as propaganda when it is highly confident.',
+      ],
+    },
+    learned: [
+      'Fine-tuning BERT-family models end-to-end',
+      'Dataset quality matters more than model architecture',
+      'Sequential transfer learning: clean domain → noisy domain adaptation',
+      'LoRA for parameter-efficient fine-tuning (fewer trainable params, same performance)',
+      'Multilingual models (XLM-RoBERTa) for cross-lingual generalization without parallel data',
+    ],
   },
+
+  'red-teaming-platform': {
+    id: '0xR004',
+    title: 'LLM Red Teaming Platform',
+    category: 'AI Safety',
+    status: 'Internal / WIP',
+    tier: 1,
+    icon: 'security',
+    stack: ['Node.js', 'Express', 'Garak', 'React', 'Vite', 'LiteLLM'],
+    metrics: [
+      { label: 'Attack Types', value: '15+' },
+      { label: 'Interface', value: 'Full Web UI' },
+      { label: 'Backend', value: 'Express + Garak' },
+      { label: 'Output', value: 'JSON Vuln Reports' },
+    ],
+    description: {
+      technical: [
+        'Express.js backend orchestrates Garak probe runs programmatically. A proxy layer sits between the UI and the target model — intercepting calls for attack injection, logging, and result capture.',
+        'Multi-route architecture: /run (execute eval), /models (target selection), /chat (direct chatbot testing), /documents (upload attack configs), /evaluation (results viewer), /chatbot (interactive adversarial session).',
+        'Structured JSON vulnerability reports per eval run, stored to disk for audit trails. React/Vite frontend for full UI access without needing the terminal.',
+      ],
+      executive: [
+        'A platform that automatically attacks AI models to discover security vulnerabilities — prompt injection, jailbreaking, recursive encoding bypasses — before bad actors can exploit them.',
+        'Brings AI security testing into a web interface, replacing command-line tools with a structured, repeatable workflow.',
+        'Produces clear vulnerability reports that security teams can act on directly.',
+      ],
+    },
+    learned: [
+      'Red teaming methodology: attack types, probes, strategies, and what actually matters',
+      'How to orchestrate Garak programmatically (not just CLI)',
+      'Building a proxy interception layer for LLM call capture',
+      'Iterative attack strategy development and refinement',
+    ],
+  },
+
+  // ── TIER 2 ──────────────────────────────────────────────────────────────
+  'dsa-tracker': {
+    id: '0xD005',
+    title: 'DSA Submissions Tracker',
+    category: 'Practice',
+    status: 'Active',
+    tier: 2,
+    label: 'ACTIVE',
+    icon: 'code',
+    githubUrl: 'https://github.com/suryansh-sharma420/neetcode-submissions-28x1abk4',
+    stack: ['NeetCode', 'GitHub Actions', 'Python'],
+    description: {
+      technical: ['NeetCode auto-pushes solutions to GitHub on every submission. Live record of DSA problem-solving across arrays, graphs, dynamic programming, trees, and more.'],
+      executive: ['Consistent, tracked practice in data structures and algorithms — automatically synced to GitHub on every solved problem.'],
+    },
+  },
+
+  'scam-proof-app': {
+    id: '0xC006',
+    title: 'Scam-Proof Ordering App',
+    category: 'Full Stack',
+    status: 'POC',
+    tier: 2,
+    label: 'POC',
+    icon: 'verified_user',
+    stack: ['FastAPI', 'React', 'Vite', 'SQLite', 'Web Scraping'],
+    description: {
+      technical: [
+        'URL crawler that scrapes an online store\'s pages and internal links, extracts safety signals (trust indicators, suspicious patterns), and generates a structured scam risk report. FastAPI backend + React/Vite frontend.',
+        'Proof-of-concept — not yet fully tested or deployed. Core scanning logic functional.',
+      ],
+      executive: ['Paste a shopping URL, get an instant safety verdict. Scans the store for scam indicators before you make a purchase. Early-stage prototype.'],
+    },
+  },
+
+  'billing-engine': {
+    id: '0xB007',
+    title: 'Unified Billing Engine',
+    category: 'Backend Systems',
+    status: 'POC',
+    tier: 2,
+    label: 'POC',
+    icon: 'payments',
+    stack: ['FastAPI', 'PostgreSQL', 'Docker', 'Strategy Pattern', 'Redis'],
+    description: {
+      technical: [
+        'Multi-tenant billing engine supporting Hybrid, Per-Trip, and Fixed pricing models via the Strategy Pattern — decoupled billing logic per model type. Built during a MoveInSync internship engagement.',
+        'Current version is dated. Strategy Pattern architecture is sound but needs update to current FastAPI and testing standards.',
+      ],
+      executive: ['Enterprise billing system that handles multiple pricing models in one platform. Early-stage proof of concept built for a real logistics company use case.'],
+    },
+  },
+
   'video-enhancement': {
-    id: '0x4F91',
+    id: '0xV008',
     title: 'Real-time Video Enhancement',
     category: 'Computer Vision',
-    status: 'Performance_Build',
+    status: 'Ideation',
+    tier: 2,
+    label: 'IDEATION',
     icon: 'video_stable',
-    metrics: [
-      { label: 'Latency', value: '< 15ms' },
-      { label: 'FPS', value: '60+' }
-    ],
-    stack: ['OpenCV', 'PyTorch', 'Super-Res', 'CUDA', 'Python'],
+    stack: ['OpenCV', 'PyTorch', 'CUDA', 'Super-Resolution'],
     description: {
       technical: [
-        'Implemented a real-time deep learning-based super-resolution pipeline optimized for frame-level execution on low-latency live streams.',
-        'Utilized CUDA-accelerated preprocessing to ensure consistent 60+ FPS performance even on high-definition input sources.'
+        'Concept: CUDA-accelerated deep learning super-resolution pipeline on live video streams. Target: 60+ FPS at <15ms latency for surveillance and sensor imagery.',
+        'Explored existing super-resolution architectures. Implementation does not yet produce reliable results — idea and direction are clear, execution is in progress.',
       ],
-      executive: [
-        'AI-powered video tool that sharpens and improves the quality of live video feeds instantly.',
-        'Perfect for enhancing grainy security footage or sensor imagery without any noticeable delay.'
-      ]
-    }
+      executive: ['AI-powered tool to sharpen low-quality live video in real time — security cameras, sensors, low-bandwidth feeds. Currently in the experimentation phase.'],
+    },
   },
-  'multimodal-rag': {
-    id: '0x7E33',
-    title: 'Multimodal RAG Generator',
+
+  'recipe-generator': {
+    id: '0xG009',
+    title: 'Recipe Generator',
     category: 'Generative AI',
-    status: 'Stable',
-    icon: 'hub',
-    metrics: [
-      { label: 'Retrieval', value: 'Semantic' },
-      { label: 'Output', value: 'Multi-Modal' }
-    ],
-    stack: ['FAISS', 'LLaMA', 'Diffusion', 'LangChain', 'Python'],
+    status: 'Ideation',
+    tier: 2,
+    label: 'IDEATION',
+    icon: 'restaurant',
+    stack: ['RAG', 'LangChain', 'FAISS', 'LLM', 'React'],
     description: {
       technical: [
-        'Built a Retrieval-Augmented Generation (RAG) pipeline using FAISS and LLaMA with semantic retrieval to ensure coherent, context-aware content generation.',
-        'Extended the architecture to support multimodal outputs, generating step-by-step images and cooking videos using diffusion-based models.'
+        'Planned RAG pipeline: user inputs ingredients/dietary constraints → FAISS semantic retrieval over recipe corpus → LLM generates step-by-step recipe with alternatives.',
+        'Deployed reference exists externally. Goal: build own version with polished UI and independent deployment.',
       ],
-      executive: [
-        'A "smart" content generator that reads through vast amounts of information and creates text, images, and even videos to explain it.',
-        'Uses context-aware retrieval to ensure the generated media is accurate and relevant to the source data.'
-      ]
-    }
-  }
+      executive: ['Tell the AI what\'s in your fridge and get a full recipe with steps, substitutions, and context. Planning to build and deploy an own version with a clean interface.'],
+    },
+  },
 };
 
 export default function ProjectDrillDown({ params }: { params: Promise<{ slug: string }> }) {
   const { mode } = useMode();
   const { slug } = use(params);
-  
   const project = PROJECT_DETAILS[slug];
 
-  if (!project) {
-    notFound();
-  }
+  if (!project) notFound();
+
+  const isTier1 = project.tier === 1;
 
   return (
     <div className="min-h-screen pt-24 pb-12">
       <Navbar />
-      
-      <main className="max-w-7xl mx-auto px-6 space-y-20">
+
+      <main className="max-w-7xl mx-auto px-6 space-y-16">
+        {/* Header */}
         <header className="space-y-4">
           <Link href="/projects" className="font-space-grotesk text-[10px] text-primary-container uppercase tracking-[0.2em] flex items-center gap-2 hover:translate-x-[-4px] transition-transform">
             <span className="material-symbols-outlined text-sm">arrow_back</span>
@@ -190,103 +312,154 @@ export default function ProjectDrillDown({ params }: { params: Promise<{ slug: s
           </Link>
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
             <div>
-              <span className="font-space-grotesk text-primary-container text-xs tracking-[0.3em] uppercase mb-4 block">
-                {mode === 'technical' ? `SYSTEM_DEEP_DIVE: ${project.id}_v1.0` : `CASE STUDY: ${project.category}`}
-              </span>
-              <h1 className="font-space-grotesk text-5xl md:text-8xl font-bold tracking-tighter text-on-surface uppercase leading-none">
+              <div className="flex items-center gap-3 mb-4">
+                <span className="font-space-grotesk text-primary-container text-xs tracking-[0.3em] uppercase">
+                  {mode === 'technical' ? `NODE: ${project.id}` : project.category}
+                </span>
+                {project.label && (
+                  <span className={`font-space-grotesk text-[9px] border px-2 py-0.5 uppercase tracking-wider ${LABEL_STYLES[project.label]}`}>
+                    {project.label}
+                  </span>
+                )}
+              </div>
+              <h1 className="font-space-grotesk text-4xl md:text-7xl font-bold tracking-tighter text-on-surface uppercase leading-none">
                 {project.title}
               </h1>
             </div>
-            <div className="md:text-right font-space-grotesk">
-              <p className="text-outline text-xs uppercase tracking-widest mb-1">Status: {project.status}</p>
-              <p className="text-on-surface-variant text-sm uppercase">Node: {project.id}</p>
+            <div className="flex items-center gap-3 md:flex-col md:items-end md:text-right">
+              <p className="text-outline text-xs uppercase tracking-widest font-space-grotesk">Status: {project.status}</p>
+              {project.githubUrl && (
+                <a
+                  href={project.githubUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 px-4 py-2 border border-primary-container/30 text-primary-container font-space-grotesk text-[10px] uppercase tracking-wider hover:bg-primary-container/10 transition-all"
+                >
+                  <span className="material-symbols-outlined text-sm">open_in_new</span>
+                  View on GitHub
+                </a>
+              )}
             </div>
           </div>
-          <div className="h-px w-full bg-gradient-to-r from-primary-container/40 to-transparent mt-8"></div>
+          <div className="h-px w-full bg-gradient-to-r from-primary-container/40 to-transparent mt-4"></div>
         </header>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
-          <div className="space-y-12">
-            <section className="space-y-6">
-              <h2 className="font-space-grotesk text-2xl font-bold uppercase tracking-tight flex items-center gap-4">
-                <span className="text-primary-container">01</span>
-                {mode === 'technical' ? 'THE_ARCHITECTURE' : 'Overview & Impact'}
-              </h2>
-              <div className="font-body text-on-surface-variant leading-relaxed space-y-6">
-                {(mode === 'technical' ? project.description.technical : project.description.executive).map((p, i) => (
-                  <p key={i}>{p}</p>
-                ))}
-              </div>
-            </section>
-
-            <section className="grid grid-cols-2 gap-6">
-              {project.metrics.map((m, i) => (
-                <div key={i} className="glass-panel p-6 relative border-l-2 border-primary-container shadow-[0_0_20px_rgba(0,240,255,0.05)]">
-                  <p className="font-space-grotesk text-[10px] text-outline uppercase tracking-[0.2em] mb-1">{m.label}</p>
-                  <p className="font-space-grotesk text-3xl font-bold text-primary-container uppercase tracking-tight">{m.value}</p>
-                </div>
-              ))}
-            </section>
-
-            <section className="space-y-4">
-              <h4 className="font-space-grotesk text-xs text-primary-container uppercase tracking-widest">Tech_Stack_Audit</h4>
-              <div className="flex flex-wrap gap-2">
-                {project.stack.map(tag => (
-                  <span key={tag} className="font-space-grotesk text-[10px] uppercase tracking-wider bg-surface-container px-3 py-1 text-on-surface border border-outline-variant/20">
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            </section>
-          </div>
-
-          <div className="space-y-8">
-            <div className="glass-panel p-8 relative overflow-hidden aspect-square flex items-center justify-center">
-              <div className="corner-bracket-tl"></div>
-              <div className="corner-bracket-br"></div>
-              <div className="absolute inset-0 technical-grid opacity-20"></div>
-              
-              {/* Architecture Visualization */}
-              <div className="relative w-full h-full flex items-center justify-center opacity-80 scale-90">
-                <div className="w-32 h-32 rounded-full border-2 border-primary-container/40 flex items-center justify-center relative z-20">
-                  <div className="w-24 h-24 rounded-full border border-primary-container flex items-center justify-center bg-primary-container/5 animate-pulse">
-                    <span className="material-symbols-outlined text-4xl text-primary-container">{project.icon}</span>
-                  </div>
-                </div>
-                {/* HUD Satellite Elements */}
-                <div className="absolute top-10 left-10 w-16 h-16 border border-primary-container/30 flex items-center justify-center rotate-45">
-                  <span className="material-symbols-outlined -rotate-45 text-primary-container/60">hub</span>
-                </div>
-                <div className="absolute top-10 right-10 w-16 h-16 border border-primary-container/30 flex items-center justify-center -rotate-12">
-                  <span className="material-symbols-outlined rotate-12 text-primary-container/60">database</span>
-                </div>
-                <div className="absolute bottom-10 right-20 w-20 h-20 border border-primary-container/30 flex items-center justify-center rotate-12">
-                  <span className="material-symbols-outlined -rotate-12 text-primary-container/60">monitoring</span>
-                </div>
-                <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 400 400">
-                  <line opacity="0.3" stroke="#00f0ff" strokeDasharray="4" strokeWidth="1" x1="200" x2="60" y1="200" y2="60"></line>
-                  <line opacity="0.3" stroke="#00f0ff" strokeDasharray="4" strokeWidth="1" x1="200" x2="340" y1="200" y2="60"></line>
-                  <line opacity="0.3" stroke="#00f0ff" strokeDasharray="4" strokeWidth="1" x1="200" x2="300" y1="200" y2="340"></line>
-                </svg>
-              </div>
-            </div>
-
-            {project.codeInsight && (
-              <div className="glass-panel p-8 space-y-4">
-                <div className="flex justify-between items-center border-b border-outline-variant/20 pb-4">
-                  <span className="font-space-grotesk text-xs text-primary-container uppercase">System_Code_Insight</span>
-                  <span className="font-space-grotesk text-[10px] text-outline">{project.codeInsight.file}</span>
-                </div>
-                <div className="bg-surface-container-lowest p-6 rounded-sm font-mono text-[11px] text-on-surface-variant overflow-x-auto whitespace-pre leading-relaxed">
-                  {project.codeInsight.content}
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
+        {isTier1 ? <Tier1Content project={project} mode={mode} /> : <Tier2Content project={project} mode={mode} />}
       </main>
 
       <Footer />
+    </div>
+  );
+}
+
+function Tier1Content({ project, mode }: { project: ProjectDetail; mode: 'technical' | 'executive' }) {
+  return (
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+      {/* Left */}
+      <div className="space-y-12">
+        <section className="space-y-6">
+          <h2 className="font-space-grotesk text-xl font-bold uppercase tracking-tight flex items-center gap-4">
+            <span className="text-primary-container">01</span>
+            {mode === 'technical' ? 'Architecture & Implementation' : 'Overview & Impact'}
+          </h2>
+          <div className="font-body text-on-surface-variant leading-relaxed space-y-5">
+            {(mode === 'technical' ? project.description.technical : project.description.executive).map((p, i) => (
+              <p key={i}>{p}</p>
+            ))}
+          </div>
+        </section>
+
+        {project.metrics && (
+          <section className="grid grid-cols-2 gap-4">
+            {project.metrics.map((m, i) => (
+              <div key={i} className="glass-panel p-5 border-l-2 border-primary-container">
+                <p className="font-space-grotesk text-[10px] text-outline uppercase tracking-[0.2em] mb-1">{m.label}</p>
+                <p className="font-space-grotesk text-xl font-bold text-primary-container uppercase tracking-tight">{m.value}</p>
+              </div>
+            ))}
+          </section>
+        )}
+
+        <section className="space-y-3">
+          <h4 className="font-space-grotesk text-xs text-primary-container uppercase tracking-widest">Stack</h4>
+          <div className="flex flex-wrap gap-2">
+            {project.stack.map(tag => (
+              <span key={tag} className="font-space-grotesk text-[10px] uppercase tracking-wider bg-surface-container px-3 py-1 text-on-surface border border-outline-variant/20">
+                {tag}
+              </span>
+            ))}
+          </div>
+        </section>
+      </div>
+
+      {/* Right */}
+      <div className="space-y-8">
+        {project.learned && (
+          <section className="glass-panel p-8 space-y-4">
+            <div className="corner-bracket-tl"></div>
+            <h3 className="font-space-grotesk text-xs text-primary-container uppercase tracking-widest">
+              {mode === 'technical' ? 'What_I_Learned' : 'Key Takeaways'}
+            </h3>
+            <ul className="space-y-3">
+              {project.learned.map((item, i) => (
+                <li key={i} className="flex items-start gap-3 font-body text-sm text-on-surface-variant">
+                  <span className="text-primary-container/50 font-space-grotesk text-[10px] mt-1 shrink-0">{String(i + 1).padStart(2, '0')}</span>
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+
+        {project.codeInsight && (
+          <section className="glass-panel p-8 space-y-4">
+            <div className="flex justify-between items-center border-b border-outline-variant/20 pb-4">
+              <span className="font-space-grotesk text-xs text-primary-container uppercase">Code_Insight</span>
+              <span className="font-space-grotesk text-[10px] text-outline">{project.codeInsight.file}</span>
+            </div>
+            <pre className="bg-surface-container-lowest p-5 font-mono text-[11px] text-on-surface-variant overflow-x-auto whitespace-pre leading-relaxed rounded-sm">
+              {project.codeInsight.content}
+            </pre>
+          </section>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function Tier2Content({ project, mode }: { project: ProjectDetail; mode: 'technical' | 'executive' }) {
+  return (
+    <div className="max-w-2xl space-y-10">
+      <section className="space-y-5">
+        <div className="font-body text-on-surface-variant leading-relaxed space-y-4">
+          {(mode === 'technical' ? project.description.technical : project.description.executive).map((p, i) => (
+            <p key={i}>{p}</p>
+          ))}
+        </div>
+      </section>
+
+      <section className="space-y-3">
+        <h4 className="font-space-grotesk text-xs text-primary-container uppercase tracking-widest">Stack</h4>
+        <div className="flex flex-wrap gap-2">
+          {project.stack.map(tag => (
+            <span key={tag} className="font-space-grotesk text-[10px] uppercase tracking-wider bg-surface-container px-3 py-1 text-on-surface border border-outline-variant/20">
+              {tag}
+            </span>
+          ))}
+        </div>
+      </section>
+
+      {project.githubUrl && (
+        <a
+          href={project.githubUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 px-6 py-3 border border-primary-container/30 text-primary-container font-space-grotesk text-xs uppercase tracking-wider hover:bg-primary-container/10 transition-all"
+        >
+          <span className="material-symbols-outlined text-sm">open_in_new</span>
+          View on GitHub
+        </a>
+      )}
     </div>
   );
 }

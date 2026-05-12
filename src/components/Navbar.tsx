@@ -28,16 +28,16 @@ export default function Navbar() {
             </span>
           </Link>
         </div>
-        
+
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center gap-8">
           {navLinks.map((link) => (
-            <Link 
+            <Link
               key={link.path}
               href={link.path}
               className={`font-space-grotesk uppercase tracking-widest text-[11px] font-bold transition-all duration-300 pb-1 border-b-2 ${
-                pathname === link.path 
-                  ? 'text-primary-container border-primary-container' 
+                pathname === link.path
+                  ? 'text-primary-container border-primary-container'
                   : 'text-on-surface-variant border-transparent hover:text-primary-container'
               }`}
             >
@@ -47,20 +47,30 @@ export default function Navbar() {
         </div>
 
         <div className="flex items-center gap-4">
-          <button 
+          {/* Sliding pill toggle */}
+          <button
             onClick={toggleMode}
-            className="flex items-center gap-2 px-3 py-1.5 bg-primary-container/5 border border-primary-container/20 hover:bg-primary-container/10 transition-all rounded-sm group"
+            aria-label="Toggle view mode"
+            className="relative flex items-center h-7 rounded-sm border border-primary-container/30 bg-surface-container overflow-hidden"
+            style={{ width: '140px' }}
           >
-            <div className={`w-2 h-2 rounded-full ${mode === 'technical' ? 'bg-primary-container animate-pulse shadow-[0_0_8px_#00f0ff]' : 'bg-on-surface-variant'}`}></div>
-            <span className="font-space-grotesk text-[10px] uppercase tracking-widest font-bold text-on-surface">
-              {mode === 'technical' ? '[TECH]' : '[EXEC]'}
+            {/* Sliding highlight */}
+            <span
+              className="absolute top-0 bottom-0 w-1/2 bg-primary-container/15 border-r border-primary-container/30 transition-transform duration-300 ease-in-out"
+              style={{ transform: mode === 'executive' ? 'translateX(0%)' : 'translateX(100%)' }}
+            />
+            <span className={`relative z-10 flex-1 text-center font-space-grotesk text-[9px] uppercase tracking-widest font-bold transition-colors duration-300 ${mode === 'executive' ? 'text-primary-container' : 'text-on-surface-variant'}`}>
+              Executive
+            </span>
+            <span className={`relative z-10 flex-1 text-center font-space-grotesk text-[9px] uppercase tracking-widest font-bold transition-colors duration-300 ${mode === 'technical' ? 'text-primary-container' : 'text-on-surface-variant'}`}>
+              Engineer
             </span>
           </button>
-          
+
           <div className="w-8 h-8 rounded-sm bg-surface-container border border-primary-container/20 overflow-hidden hidden sm:block">
-            <Image 
-              alt="Suryansh Sharma" 
-              className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500" 
+            <Image
+              alt="Suryansh Sharma"
+              className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500"
               src="/suryansh_profile.png"
               width={32}
               height={32}
@@ -68,7 +78,7 @@ export default function Navbar() {
           </div>
 
           {/* Mobile Menu Toggle */}
-          <button 
+          <button
             className="md:hidden text-primary-container material-symbols-outlined"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
@@ -81,7 +91,7 @@ export default function Navbar() {
       {isMenuOpen && (
         <div className="md:hidden absolute top-16 left-0 w-full bg-surface-container/95 backdrop-blur-2xl border-b border-primary-container/20 p-6 flex flex-col gap-6 animate-in slide-in-from-top duration-300">
           {navLinks.map((link) => (
-            <Link 
+            <Link
               key={link.path}
               href={link.path}
               onClick={() => setIsMenuOpen(false)}
@@ -92,6 +102,23 @@ export default function Navbar() {
               {link.name}
             </Link>
           ))}
+          {/* Mobile toggle */}
+          <button
+            onClick={toggleMode}
+            className="relative flex items-center h-8 rounded-sm border border-primary-container/30 bg-surface-container overflow-hidden self-start"
+            style={{ width: '140px' }}
+          >
+            <span
+              className="absolute top-0 bottom-0 w-1/2 bg-primary-container/15 border-r border-primary-container/30 transition-transform duration-300 ease-in-out"
+              style={{ transform: mode === 'executive' ? 'translateX(0%)' : 'translateX(100%)' }}
+            />
+            <span className={`relative z-10 flex-1 text-center font-space-grotesk text-[9px] uppercase tracking-widest font-bold transition-colors duration-300 ${mode === 'executive' ? 'text-primary-container' : 'text-on-surface-variant'}`}>
+              Executive
+            </span>
+            <span className={`relative z-10 flex-1 text-center font-space-grotesk text-[9px] uppercase tracking-widest font-bold transition-colors duration-300 ${mode === 'technical' ? 'text-primary-container' : 'text-on-surface-variant'}`}>
+              Engineer
+            </span>
+          </button>
         </div>
       )}
     </nav>

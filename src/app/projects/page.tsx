@@ -5,6 +5,9 @@ import Footer from '@/components/Footer';
 import { useMode } from '@/context/ModeContext';
 import Link from 'next/link';
 
+type ProjectTier = 1 | 2;
+type ProjectLabel = 'RESEARCH' | 'POC' | 'IDEATION' | 'ACTIVE';
+
 interface Project {
   id: string;
   title: string;
@@ -17,88 +20,154 @@ interface Project {
   metrics?: Record<string, string>;
   category: string;
   icon: string;
+  tier: ProjectTier;
+  label?: ProjectLabel;
+  githubUrl?: string;
 }
 
-const PROJECTS: Project[] = [
+const TIER1_PROJECTS: Project[] = [
   {
-    id: '0x8FA2',
-    title: 'LLM Red Teaming & Eval Platform',
-    slug: 'red-teaming-platform',
-    category: 'AI Safety / Security',
-    icon: 'security',
-    tags: ['Garak', 'PromptFoo', 'FastAPI', 'LiteLLM'],
+    id: '0xZ001',
+    title: 'Zorvyn — Financial Backend',
+    slug: 'zorvyn',
+    category: 'Backend Systems',
+    icon: 'account_balance',
+    tier: 1,
+    tags: ['FastAPI', 'SQLAlchemy', 'JWT', 'RBAC', 'Pytest'],
+    githubUrl: 'https://github.com/suryansh-sharma420/Finance-Data-Processing-and-Access-Control-Backend',
     description: {
-      technical: 'Automated security testing platform integrating Garak and PromptFoo to simulate adversarial attacks (prompt injection, jailbreaks) with structured JSON vulnerability reporting.',
-      executive: 'Enterprise-grade AI safety platform that identifies and mitigates security risks in LLM deployments through automated adversarial testing.'
+      technical: 'Clean 3-layer FastAPI backend (Routes → Services → Repositories) with RBAC (Admin/Analyst/Viewer), JWT auth, and an analytics engine computing MoM growth, savings rates, and net balance. 100% Pytest coverage with in-memory StaticPool isolation.',
+      executive: 'Secure financial management API with role-based access control. Analysts get read-only dashboards, admins get full control, viewers see only their own data. Complete with automated test coverage.'
     },
-    metrics: { 'Coverage': '98%', 'Attacks': '15+ Types' }
+    metrics: { 'Test Coverage': '100%', 'Auth': 'JWT + RBAC' }
   },
   {
-    id: '0xCC12',
-    title: 'Multi-Tenant Billing Engine',
-    slug: 'billing-engine',
-    category: 'Distributed Systems',
-    icon: 'payments',
-    tags: ['FastAPI', 'PostgreSQL', 'Docker', 'Strategy Pattern'],
+    id: '0xS002',
+    title: 'Sagepilot — AI Order Supervisor',
+    slug: 'sagepilot',
+    category: 'AI Agents',
+    icon: 'smart_toy',
+    tier: 1,
+    tags: ['FastAPI', 'PostgreSQL', 'Llama-3', 'Groq', 'Alembic'],
+    githubUrl: 'https://github.com/suryansh-sharma420/AI_Supervisor',
     description: {
-      technical: 'High-throughput billing engine supporting Hybrid/Per-Trip models using the Strategy Pattern. Optimized with connection pooling, raw SQL, and LRU caching.',
-      executive: 'Scalable financial infrastructure that unified disparate billing models into a single, fault-tolerant system processing complex enterprise contracts.'
+      technical: 'Autonomous agent system where each e-commerce order gets a dedicated Llama-3.3-70b supervisor. Agent watches for events (payment failure, shipment updates) and takes actions. Llama-3.1-8b classifier routes events. FastAPI + PostgreSQL + React frontend.',
+      executive: 'Each customer order gets its own AI supervisor that monitors delivery, flags payment issues, and keeps teams informed — automatically. Built with large language models and a full web interface.'
     },
-    metrics: { 'Uptime': '99.99%', 'Throughput': 'High-Load' }
+    metrics: { 'Agent Model': 'Llama-3.3-70b', 'Pattern': 'Event-Driven' }
   },
   {
-    id: '0x2B41',
-    title: 'AI Project Management Tool',
-    slug: 'ai-pm-tool',
-    category: 'AI Systems Architecture',
-    icon: 'account_tree',
-    tags: ['Python', 'Llama-3', 'SQLAlchemy', 'Agentic'],
-    description: {
-      technical: 'Generative AI pipelines for real-time "Scope Drift" auditing and predictive readiness scoring using Llama-3 and dynamic state synchronization.',
-      executive: 'Intelligence layer for project management that predicts delays and audits scope changes automatically using advanced language models.'
-    },
-    metrics: { 'Efficiency': '+30%', 'State': 'Real-time' }
-  },
-  {
-    id: '0x992E',
+    id: '0xP003',
     title: 'Propaganda Detection Engine',
     slug: 'propaganda-detection',
-    category: 'NLP Systems',
+    category: 'NLP / Research',
     icon: 'monitoring',
-    tags: ['PyTorch', 'XLM-RoBERTa', 'PEFT', 'LoRA'],
+    tier: 1,
+    label: 'RESEARCH',
+    tags: ['PyTorch', 'XLM-RoBERTa', 'LoRA', 'PEFT', 'Hugging Face'],
+    githubUrl: 'https://github.com/suryansh-sharma420/Propaganda-Detection-Project',
     description: {
-      technical: 'Sequential Transfer Learning pipeline using XLM-RoBERTa for cross-lingual (EN/HI) classification. Mitigated 5.5:1 imbalance via custom Focal Loss.',
-      executive: 'Advanced multilingual AI system designed to detect manipulative social media content across different languages with high precision.'
+      technical: 'Sequential transfer learning pipeline: XLM-RoBERTa pretrained on clean SemEval news data, then DAPT on noisy tweets (HQP). Mitigated 5.5:1 class imbalance with custom Focal Loss. Cross-lingual EN/HI classification.',
+      executive: 'AI system detecting manipulative content in social media posts across English and Hindi. Training on clean data first — then adapting to real-world noisy tweets — produced a model with zero false positives on neutral content.'
     },
-    metrics: { 'Precision': '92%', 'Imbalance': '5.5:1' }
+    metrics: { 'Recall': '75.3%', 'Specificity': '100%' }
   },
   {
-    id: '0x4F91',
+    id: '0xR004',
+    title: 'LLM Red Teaming Platform',
+    slug: 'red-teaming-platform',
+    category: 'AI Safety',
+    icon: 'security',
+    tier: 1,
+    tags: ['Node.js', 'Garak', 'React', 'Vite', 'LLM Eval'],
+    description: {
+      technical: 'Full-stack adversarial evaluation platform. Express.js backend orchestrates Garak probe runs with a proxy layer intercepting model calls for attack injection. React/Vite frontend for running evals, chatbot testing, and document-based attack configs.',
+      executive: 'A platform that automatically attacks AI models to find security weaknesses — before bad actors do. Covers prompt injection, jailbreaking, and recursive encoding bypasses. Results delivered as structured vulnerability reports.'
+    },
+    metrics: { 'Attack Types': '15+', 'Interface': 'Full UI' }
+  }
+];
+
+const TIER2_PROJECTS: Project[] = [
+  {
+    id: '0xD005',
+    title: 'DSA Submissions Tracker',
+    slug: 'dsa-tracker',
+    category: 'Practice',
+    icon: 'code',
+    tier: 2,
+    label: 'ACTIVE',
+    tags: ['NeetCode', 'GitHub Actions', 'Python'],
+    githubUrl: 'https://github.com/suryansh-sharma420/neetcode-submissions-28x1abk4',
+    description: {
+      technical: 'NeetCode auto-pushes solutions to GitHub. Live record of DSA problem-solving activity across arrays, graphs, DP, and more.',
+      executive: 'Consistent, tracked practice in data structures and algorithms — automatically synced to GitHub.'
+    }
+  },
+  {
+    id: '0xC006',
+    title: 'Scam-Proof Ordering App',
+    slug: 'scam-proof-app',
+    category: 'Full Stack',
+    icon: 'verified_user',
+    tier: 2,
+    label: 'POC',
+    tags: ['FastAPI', 'React', 'Vite', 'Web Scraping'],
+    description: {
+      technical: 'URL crawler that extracts safety signals from an online store\'s pages and generates an explainable scam risk report. FastAPI backend + React frontend.',
+      executive: 'Paste a shopping URL, get an instant safety verdict. Crawls the store and checks for scam indicators before you buy.'
+    }
+  },
+  {
+    id: '0xB007',
+    title: 'Unified Billing Engine',
+    slug: 'billing-engine',
+    category: 'Backend Systems',
+    icon: 'payments',
+    tier: 2,
+    label: 'POC',
+    tags: ['FastAPI', 'PostgreSQL', 'Docker', 'Strategy Pattern'],
+    description: {
+      technical: 'Multi-tenant billing engine supporting Hybrid/Per-Trip/Fixed models using Strategy Pattern. Built during MoveInSync internship. Needs update to current standards.',
+      executive: 'Enterprise billing system supporting multiple pricing models in one unified platform. Early-stage proof of concept.'
+    }
+  },
+  {
+    id: '0xV008',
     title: 'Real-time Video Enhancement',
     slug: 'video-enhancement',
     category: 'Computer Vision',
     icon: 'video_stable',
-    tags: ['OpenCV', 'PyTorch', 'Super-Res', 'CUDA'],
+    tier: 2,
+    label: 'IDEATION',
+    tags: ['OpenCV', 'PyTorch', 'CUDA', 'Super-Res'],
     description: {
-      technical: 'Deep learning-based super-resolution pipeline for live video enhancement. Optimized preprocessing and frame-level execution for low-latency streams.',
-      executive: 'AI-powered video quality enhancement tool that sharpens low-resolution surveillance and sensor imagery in real-time.'
-    },
-    metrics: { 'Latency': '< 15ms', 'FPS': '60+' }
+      technical: 'CUDA-accelerated deep learning super-resolution on live video streams targeting 60+ FPS at <15ms latency. Implementation in progress.',
+      executive: 'AI-powered tool to sharpen low-quality live video in real time — security cameras, sensor feeds, low-bandwidth streams.'
+    }
   },
   {
-    id: '0x7E33',
-    title: 'Multimodal RAG Generator',
-    slug: 'multimodal-rag',
+    id: '0xG009',
+    title: 'Recipe Generator',
+    slug: 'recipe-generator',
     category: 'Generative AI',
-    icon: 'hub',
-    tags: ['FAISS', 'LLaMA', 'Diffusion', 'LangChain'],
+    icon: 'restaurant',
+    tier: 2,
+    label: 'IDEATION',
+    tags: ['RAG', 'LangChain', 'FAISS', 'React'],
     description: {
-      technical: 'RAG pipeline with semantic retrieval ensuring context-aware generation. Extended with multimodal outputs (images/videos) via diffusion models.',
-      executive: 'Context-aware AI generator that creates rich, multi-modal content (text, images, video) based on private document repositories.'
-    },
-    metrics: { 'Retrieval': 'Semantic', 'Output': 'Multi-Modal' }
+      technical: 'RAG-based recipe generator: input ingredients/constraints → semantic retrieval → LLM generates step-by-step recipe. Targeting deployment with polished UI.',
+      executive: 'Tell the AI what you have in your fridge. Get a full recipe with steps, alternatives, and nutritional context.'
+    }
   }
 ];
+
+const LABEL_STYLES: Record<ProjectLabel, string> = {
+  RESEARCH: 'text-purple-400 border-purple-400/30 bg-purple-400/5',
+  POC: 'text-yellow-400 border-yellow-400/30 bg-yellow-400/5',
+  IDEATION: 'text-outline border-outline/30 bg-outline/5',
+  ACTIVE: 'text-green-400 border-green-400/30 bg-green-400/5',
+};
 
 export default function ProjectsPage() {
   const { mode } = useMode();
@@ -106,7 +175,7 @@ export default function ProjectsPage() {
   return (
     <div className="min-h-screen pt-24 pb-12">
       <Navbar />
-      
+
       <main className="max-w-7xl mx-auto px-6 space-y-20">
         <header className="space-y-4">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
@@ -123,17 +192,46 @@ export default function ProjectsPage() {
                 {mode === 'technical' ? 'Access Level: Administrator' : 'Executive Summary'}
               </p>
               <p className="text-on-surface-variant text-sm uppercase">
-                {mode === 'technical' ? 'SECURE_NODE_04 // PORT: 8080' : 'High-Impact Deliverables'}
+                {TIER1_PROJECTS.length} Featured · {TIER2_PROJECTS.length} Exploring
               </p>
             </div>
           </div>
           <div className="h-px w-full bg-gradient-to-r from-primary-container/40 to-transparent mt-8"></div>
         </header>
 
-        <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {PROJECTS.map((project) => (
-            <ProjectCard key={project.id} project={project} mode={mode} />
-          ))}
+        {/* Tier 1 */}
+        <section className="space-y-8">
+          <h2 className="font-space-grotesk text-xs text-primary-container uppercase tracking-[0.4em]">
+            {mode === 'technical' ? '// CORE_SYSTEMS' : 'Featured Work'}
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {TIER1_PROJECTS.map((project) => (
+              <ProjectCard key={project.id} project={project} mode={mode} />
+            ))}
+          </div>
+        </section>
+
+        {/* Divider */}
+        <div className="flex items-center gap-4">
+          <div className="h-px flex-1 bg-outline-variant/20"></div>
+          <span className="font-space-grotesk text-[10px] text-outline uppercase tracking-[0.3em]">
+            {mode === 'technical' ? 'EXTENDED_MODULES' : 'Also Exploring'}
+          </span>
+          <div className="h-px flex-1 bg-outline-variant/20"></div>
+        </div>
+
+        {/* Tier 2 */}
+        <section className="space-y-8">
+          <p className="font-body text-sm text-on-surface-variant max-w-xl">
+            {mode === 'technical'
+              ? 'Experimental systems, active research, and ideas in development. Honest about maturity level.'
+              : 'A mix of proof-of-concepts, ongoing practice, and early-stage ideas. Raw but real.'}
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {TIER2_PROJECTS.map((project) => (
+              <ProjectCard key={project.id} project={project} mode={mode} compact />
+            ))}
+          </div>
         </section>
       </main>
 
@@ -142,43 +240,64 @@ export default function ProjectsPage() {
   );
 }
 
-function ProjectCard({ project, mode }: { project: Project, mode: 'technical' | 'executive' }) {
+function ProjectCard({ project, mode, compact = false }: { project: Project; mode: 'technical' | 'executive'; compact?: boolean }) {
   return (
-    <div className="glass-panel relative p-8 group hover:bg-surface-container-highest/60 transition-all duration-300">
+    <div className={`glass-panel relative ${compact ? 'p-6' : 'p-8'} group hover:bg-surface-container-highest/60 transition-all duration-300`}>
       <div className="corner-bracket-tl"></div>
       <div className="corner-bracket-br"></div>
-      
-      <div className="flex justify-between items-start mb-6">
-        <div className="w-12 h-12 rounded border border-primary-container/30 flex items-center justify-center bg-surface-container-low">
-          <span className="material-symbols-outlined text-primary-container">{project.icon}</span>
+
+      <div className="flex justify-between items-start mb-5">
+        <div className="w-10 h-10 rounded border border-primary-container/30 flex items-center justify-center bg-surface-container-low">
+          <span className="material-symbols-outlined text-primary-container text-xl">{project.icon}</span>
         </div>
-        <span className="font-space-grotesk text-[10px] text-primary-container/60 border border-primary-container/20 px-2 py-1 rounded uppercase tracking-tighter">
-          {mode === 'technical' ? `NODE_${project.id}` : project.category}
-        </span>
+        <div className="flex items-center gap-2">
+          {project.label && (
+            <span className={`font-space-grotesk text-[9px] border px-2 py-0.5 uppercase tracking-wider ${LABEL_STYLES[project.label]}`}>
+              {project.label}
+            </span>
+          )}
+          <span className="font-space-grotesk text-[9px] text-primary-container/50 border border-primary-container/15 px-2 py-0.5 uppercase tracking-tight">
+            {project.category}
+          </span>
+        </div>
       </div>
 
-      <h3 className="font-space-grotesk text-xl font-bold mb-2 text-on-surface uppercase tracking-tight">
+      <h3 className={`font-space-grotesk ${compact ? 'text-base' : 'text-xl'} font-bold mb-2 text-on-surface uppercase tracking-tight`}>
         {project.title}
       </h3>
-      
-      <p className="font-body text-sm text-on-surface-variant mb-6 leading-relaxed min-h-[80px]">
+
+      <p className="font-body text-sm text-on-surface-variant mb-5 leading-relaxed">
         {mode === 'technical' ? project.description.technical : project.description.executive}
       </p>
 
-      <div className="flex flex-wrap gap-2 mb-8 h-[48px]">
-        {project.tags.map(tag => (
-          <span key={tag} className="font-space-grotesk text-[9px] uppercase tracking-wider bg-surface-container px-2 py-1 text-on-surface-variant border border-outline-variant/20">
-            {tag}
-          </span>
-        ))}
-      </div>
+      {!compact && (
+        <div className="flex flex-wrap gap-2 mb-6">
+          {project.tags.map(tag => (
+            <span key={tag} className="font-space-grotesk text-[9px] uppercase tracking-wider bg-surface-container px-2 py-1 text-on-surface-variant border border-outline-variant/20">
+              {tag}
+            </span>
+          ))}
+        </div>
+      )}
 
-      <Link 
-        href={`/projects/${project.slug}`}
-        className="block w-full py-3 bg-surface-container-highest border border-outline-variant/30 text-primary-container font-space-grotesk text-xs tracking-widest uppercase hover:bg-primary-container hover:text-on-primary transition-all active:scale-95 text-center font-bold"
-      >
-        {mode === 'technical' ? 'Execute_Module_DeepDive' : 'View Project Details'}
-      </Link>
+      <div className="flex gap-2">
+        <Link
+          href={`/projects/${project.slug}`}
+          className="flex-1 py-2.5 bg-surface-container-highest border border-outline-variant/30 text-primary-container font-space-grotesk text-[10px] tracking-widest uppercase hover:bg-primary-container hover:text-on-primary transition-all active:scale-95 text-center font-bold"
+        >
+          {mode === 'technical' ? 'Deep_Dive' : 'View Details'}
+        </Link>
+        {project.githubUrl && (
+          <a
+            href={project.githubUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="px-3 py-2.5 border border-outline-variant/30 text-on-surface-variant font-space-grotesk text-[10px] hover:border-primary-container hover:text-primary-container transition-all flex items-center gap-1"
+          >
+            <span className="material-symbols-outlined text-sm">open_in_new</span>
+          </a>
+        )}
+      </div>
     </div>
   );
 }
