@@ -45,70 +45,56 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
 
   return (
     <div className="fixed inset-0 z-[200] flex items-center justify-center p-6">
-      {/* Backdrop */}
-      <div 
-        className="absolute inset-0 bg-background/80 backdrop-blur-md"
+      <div
+        className="absolute inset-0 bg-white/80 backdrop-blur-sm"
         onClick={onClose}
       />
-      
-      {/* Modal Content */}
-      <div className="relative w-full max-w-lg glass-panel p-8 md:p-12 animate-in zoom-in-95 duration-300">
-        <div className="corner-bracket-tl"></div>
-        <div className="corner-bracket-br"></div>
-        
-        <button 
+
+      <div className="relative w-full max-w-lg bg-white border border-outline-variant p-8 md:p-12">
+        <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-primary-container/60 hover:text-primary-container transition-colors"
+          className="absolute top-4 right-4 text-on-surface-variant hover:text-primary-container transition-colors"
         >
           <span className="material-symbols-outlined">close</span>
         </button>
 
-        <header className="mb-12 space-y-2">
-          <span className="font-space-grotesk text-primary-container text-[10px] tracking-[0.4em] uppercase block">
-            {mode === 'technical' ? 'ESTABLISHING_LINK...' : 'CONNECT_WITH_ME'}
+        <header className="mb-10 space-y-2">
+          <span className="font-space-grotesk text-on-surface-variant text-[10px] tracking-[0.3em] uppercase block">
+            {mode === 'technical' ? 'Establishing Link...' : 'Connect With Me'}
           </span>
           <h2 className="font-space-grotesk text-3xl font-bold text-on-surface uppercase tracking-tight">
-            Get_In_Touch
+            Get In Touch
           </h2>
         </header>
 
-        <div className="space-y-6">
+        <div className="space-y-4">
           {contacts.map((contact) => (
-            <a 
+            <a
               key={contact.name}
               href={contact.link}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-6 p-4 bg-surface-container-low border border-outline-variant/10 hover:border-primary-container/40 hover:bg-surface-container-high transition-all group relative overflow-hidden"
+              className="flex items-center gap-5 p-4 border border-outline-variant hover:border-primary-container transition-all group"
             >
-              <div className="absolute inset-0 bg-primary-container/5 translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-500"></div>
-              <div className="w-12 h-12 flex items-center justify-center border border-primary-container/20 group-hover:border-primary-container/60 transition-colors">
-                <span className="material-symbols-outlined text-primary-container text-xl">{contact.icon}</span>
+              <div className="w-10 h-10 flex items-center justify-center border border-outline-variant group-hover:border-primary-container transition-colors">
+                <span className="material-symbols-outlined text-on-surface-variant group-hover:text-primary-container text-lg transition-colors">{contact.icon}</span>
               </div>
-              <div className="relative z-10">
-                <span className="font-space-grotesk text-[9px] text-primary-container uppercase tracking-widest block mb-1 opacity-60">
+              <div>
+                <span className="font-space-grotesk text-[9px] text-on-surface-variant uppercase tracking-widest block mb-0.5">
                   {contact.name}
                 </span>
                 <span className="font-space-grotesk text-sm font-bold text-on-surface group-hover:text-primary-container transition-colors">
                   {contact.value}
                 </span>
               </div>
-              <span className="material-symbols-outlined ml-auto text-primary-container opacity-0 group-hover:opacity-100 transition-all translate-x-4 group-hover:translate-x-0">
-                arrow_forward
-              </span>
             </a>
           ))}
         </div>
 
-        <footer className="mt-12 pt-8 border-t border-outline-variant/10 flex justify-between items-center">
-          <div className="font-space-grotesk text-[9px] text-on-surface-variant uppercase tracking-widest">
-            {mode === 'technical' ? 'PORT: 8080 // SECURE' : 'Available for opportunities'}
-          </div>
-          <div className="flex gap-2">
-            <div className="w-1.5 h-1.5 rounded-full bg-primary-container animate-pulse"></div>
-            <div className="w-1.5 h-1.5 rounded-full bg-primary-container/40"></div>
-            <div className="w-1.5 h-1.5 rounded-full bg-primary-container/20"></div>
-          </div>
+        <footer className="mt-10 pt-6 border-t border-outline-variant text-center">
+          <span className="font-space-grotesk text-[9px] text-on-surface-variant uppercase tracking-widest">
+            Available for opportunities
+          </span>
         </footer>
       </div>
     </div>

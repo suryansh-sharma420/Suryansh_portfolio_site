@@ -1,25 +1,27 @@
 @import "tailwindcss";
 
 @theme {
-  --color-primary: #dbfcff;
-  --color-primary-container: #00f0ff;
-  --color-on-primary: #00363a;
-  --color-secondary: #44d8f1;
-  --color-surface: #051424;
-  --color-background: #051424;
-  --color-on-background: #d5e4fa;
-  --color-on-surface: #d5e4fa;
-  --color-on-surface-variant: #b9cacb;
-  --color-surface-container: #122031;
-  --color-surface-container-low: #0e1c2d;
-  --color-surface-container-high: #1d2b3c;
-  --color-surface-container-highest: #283647;
-  --color-outline-variant: #3b494b;
+  --color-primary: #1a1a1a;
+  --color-primary-container: #1a1a1a;
+  --color-on-primary: #ffffff;
+  --color-secondary: #6b6b6b;
+  --color-surface: #ffffff;
+  --color-background: #ffffff;
+  --color-on-background: #1a1a1a;
+  --color-on-surface: #1a1a1a;
+  --color-on-surface-variant: #6b6b6b;
+  --color-surface-container: #f8f8f6;
+  --color-surface-container-low: #fafafa;
+  --color-surface-container-high: #f0f0ee;
+  --color-surface-container-highest: #e8e8e6;
+  --color-surface-container-lowest: #ffffff;
+  --color-outline: #999999;
+  --color-outline-variant: #e0e0e0;
 }
 
 :root {
-  --background: #051424;
-  --foreground: #d5e4fa;
+  --background: #ffffff;
+  --foreground: #1a1a1a;
   --font-inter: var(--font-inter);
   --font-space-grotesk: var(--font-space-grotesk);
 }
@@ -39,17 +41,9 @@
 }
 
 @layer components {
-  .technical-grid {
-    background-image: 
-        linear-gradient(to right, rgba(59, 73, 75, 0.1) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(59, 73, 75, 0.1) 1px, transparent 1px);
-    background-size: 40px 40px;
-  }
-
   .glass-panel {
-    backdrop-filter: blur(20px);
-    background: rgba(40, 54, 71, 0.4);
-    border: 1px solid rgba(0, 240, 255, 0.1);
+    background: #ffffff;
+    border: 1px solid #e0e0e0;
   }
 
   .corner-bracket-tl {
@@ -59,14 +53,6 @@
   .corner-bracket-br {
     @apply absolute -bottom-px -right-px w-3 h-3 border-b border-r border-primary-container;
   }
-
-  .glow-cyan {
-    box-shadow: 0 0 20px rgba(0, 240, 255, 0.15);
-  }
-
-  .glow-cyan-strong {
-    box-shadow: 0 0 40px rgba(0, 240, 255, 0.25);
-  }
 }
 
 /* Custom Scrollbar */
@@ -74,9 +60,12 @@
   width: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #051424;
+  background: #f8f8f6;
 }
 ::-webkit-scrollbar-thumb {
-  background: #00f0ff;
+  background: #cccccc;
   border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #999999;
 }
