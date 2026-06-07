@@ -14,8 +14,8 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
-  title: "CORE_OS // PORTFOLIO",
-  description: "Engineering High-Performance Digital Architectures",
+  title: "Suryansh Sharma — Portfolio",
+  description: "Software Engineer & AI Systems Builder",
 };
 
 export default function RootLayout({
@@ -24,11 +24,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en">
       <head>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1" />
       </head>
-      <body className={`${inter.variable} ${spaceGrotesk.variable} technical-grid`}>
+      <body className={`${inter.variable} ${spaceGrotesk.variable}`}>
         <ModeProvider>
           {children}
         </ModeProvider>
