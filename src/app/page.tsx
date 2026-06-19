@@ -2,179 +2,396 @@
 
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import { useMode } from '@/context/ModeContext';
 import Image from 'next/image';
+import { useEffect, useRef, useState } from 'react';
 
 export default function Home() {
-  const { mode } = useMode();
+  const revealRefs = useRef<HTMLDivElement[]>([]);
+  const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    const obs = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) e.target.classList.add('manga-active');
+        });
+      },
+      { threshold: 0.1 }
+    );
+    revealRefs.current.forEach((el) => el && obs.observe(el));
+    return () => obs.disconnect();
+  }, []);
+
+  const addRevealRef = (el: HTMLDivElement | null) => {
+    if (el && !revealRefs.current.includes(el)) revealRefs.current.push(el);
+  };
+
+  const handleCopyEmail = () => {
+    navigator.clipboard.writeText('ssuryansh7003@gmail.com');
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const experience = [
+    {
+      company: 'Tech Mahindra',
+      role: 'Associate Analyst // GenAI',
+      date: 'Feb 2026 — Present',
+      description:
+        'Architecting GCP-based RAG workflows and autonomous data extraction systems. Performing adversarial red teaming on foundation models. Building enterprise-scale AI solutions for global clients.',
+    },
+    {
+      company: 'Naxxatra Sciences',
+      role: 'Data Science & ML Intern',
+      date: 'Jun — Aug 2025',
+      description:
+        'Developed a scientific imaging CNN achieving 99% accuracy in MRI classification. Engineered robust end-to-end data pipelines for medical imaging analysis and production-ready model deployment workflows.',
+    },
+  ];
+
+  const skills = [
+    { name: 'Python / FastAPI', pct: 90 },
+    { name: 'Agentic AI', pct: 88 },
+    { name: 'LangChain', pct: 85 },
+    { name: 'RAG', pct: 88 },
+    { name: 'SQL', pct: 83 },
+    { name: 'Prompt Engineering', pct: 86 },
+    { name: 'PyTorch', pct: 82 },
+    { name: 'Full-Stack Apps', pct: 80 },
+  ];
 
   return (
-    <div className="min-h-screen pt-28 pb-12 flex flex-col">
+    <div className="min-h-screen flex flex-col">
       <Navbar />
 
-      <main className="max-w-6xl mx-auto px-6 space-y-32 flex-grow">
-        {/* Hero Section */}
-        <section className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center min-h-[70vh]">
-          <div className="lg:col-span-7 space-y-8">
-            <div className="inline-flex items-center gap-2 text-on-surface-variant px-3 py-1 border-l-2 border-primary-container">
-              <span className="font-space-grotesk text-[10px] uppercase tracking-[0.3em] font-bold">
-                {mode === 'technical' ? 'System Identity' : 'Executive Profile'}
-              </span>
-            </div>
+      {/* ══════ COVER ══════ */}
+      <section className="min-h-screen relative bg-white border-b-4 border-[#0a0a0a] overflow-hidden flex items-stretch pt-14">
+        {/* Speed lines */}
+        <div className="speed-lines" style={{ backgroundImage: 'repeating-conic-gradient(from 0deg at 65% 50%, rgba(0,0,0,.065) 0deg 1.2deg, transparent 1.2deg 8deg)' }} />
+        {/* White fade from left */}
+        <div className="absolute inset-0 z-[1] pointer-events-none" style={{ background: 'linear-gradient(90deg, rgba(255,255,255,.96) 32%, rgba(255,255,255,.3) 58%, transparent 72%)' }} />
 
-            <div className="space-y-4">
-              <h1 className="font-space-grotesk text-6xl md:text-8xl lg:text-9xl font-bold leading-[0.8] tracking-tighter text-on-surface uppercase">
-                SURYANSH <br/>
-                <span className="text-on-surface-variant">SHARMA</span>
-              </h1>
-              <h2 className="font-space-grotesk text-2xl md:text-4xl text-on-surface-variant font-light tracking-tight">
-                {mode === 'technical'
-                  ? '// Engineering High-Performance AI Systems'
-                  : '// Architecting Strategic Digital Solutions'}
-              </h2>
+        {/* LEFT: Title */}
+        <div className="flex-[0_0_50%] flex flex-col justify-between p-14 relative z-[2]">
+          <div>
+            <div
+              className="text-[11px] tracking-[0.35em] text-[#CC1111] border-2 border-[#CC1111] inline-block px-2.5 py-0.5 mb-2.5"
+              style={{ fontFamily: 'var(--font-bangers)' }}
+            >
+              VOL. 01
             </div>
+            <div className="font-space-grotesk text-[11px] font-semibold tracking-[0.22em] uppercase text-black/30">
+              The Portfolio — Complete Edition
+            </div>
+          </div>
 
-            <p className="font-body text-lg text-on-surface-variant max-w-2xl leading-relaxed">
-              {mode === 'technical'
-                ? 'Hi, I am Suryansh Sharma, a final-year B.Tech student, and a Software Engineer. I am passionate about building scalable, production-ready AI applications that solve real-world problems. My work focuses on the intersection of Deep Learning, Generative AI and core Software Development. I am currently working as an Associate Analyst at Tech Mahindra, where I am involved in developing and deploying AI solutions for enterprise clients. Previously, I interned at Naxxatra Sciences, where I worked on developing a deep learning model for medical imaging analysis. I am new to the world of Open Source and continuously learning and improving my skills in the ever-evolving field of Artificial Intelligence. The next time you see this, you wont recognize it.'
-                : 'Passionate about solving real-world problems using AI at scale. Bridging the gap between complex engineering and business growth through robust architectures and approaches that iteratively improve.'}
+          <div>
+            <h1
+              className="text-[clamp(76px,11vw,156px)] leading-[0.85] tracking-[0.04em] text-[#0a0a0a] uppercase"
+              style={{ fontFamily: 'var(--font-bangers)', textShadow: '5px 5px 0 rgba(0,0,0,.1)' }}
+            >
+              SURYANSH<br />SHARMA
+            </h1>
+            <div
+              className="text-[26px] tracking-[0.2em] text-[#CC1111] mt-3.5 uppercase"
+              style={{ fontFamily: 'var(--font-bangers)' }}
+            >
+              The Software Engineer
+            </div>
+            <p className="font-space-grotesk text-[13px] text-black/45 mt-3.5 leading-[1.7] max-w-[310px]">
+              FastAPI &middot; Agentic AI &middot; PyTorch &middot; RAG Pipelines &middot; LangChain
             </p>
+          </div>
 
-            <div className="space-y-10">
-              <div className="flex flex-wrap gap-4 font-space-grotesk">
-                <a href="/SURYANSH_SHARMA.pdf" target="_blank" rel="noopener noreferrer" className="px-10 py-4 bg-primary-container text-on-primary font-bold uppercase tracking-widest text-xs hover:opacity-90 active:scale-95 transition-all inline-block">
-                  View Resume
-                </a>
+          <div className="flex flex-col gap-3.5">
+            <a
+              href="#ch01"
+              className="text-xl tracking-[0.1em] text-white bg-[#0a0a0a] py-3.5 px-7 inline-block uppercase border-[3px] border-[#0a0a0a]"
+              style={{ fontFamily: 'var(--font-bangers)' }}
+            >
+              Begin Reading &darr;
+            </a>
+            <div className="font-space-grotesk text-[11px] font-semibold tracking-[0.18em] uppercase text-black/28">
+              github.com/suryansh-sharma420
+            </div>
+          </div>
+        </div>
+
+        {/* RIGHT: Photo panel */}
+        <div className="flex-1 relative border-l-4 border-[#0a0a0a] overflow-hidden z-[2]">
+          <div className="manga-photo h-full min-h-[600px]">
+            <Image
+              src="/images/IMG-20260613-WA0326.jpg"
+              alt="Suryansh Sharma"
+              fill
+              className="object-cover object-top"
+              style={{ filter: 'grayscale(100%) contrast(1.3) brightness(0.88)' }}
+              unoptimized
+            />
+          </div>
+          <div className="absolute bottom-0 left-0 right-0 h-[28%] pointer-events-none z-[1]" style={{ background: 'linear-gradient(to top, #fff, transparent)' }} />
+          {/* SFX */}
+          <div
+            className="absolute top-[12%] left-[8%] text-[84px] text-[#CC1111] z-[2] leading-none pointer-events-none"
+            style={{ fontFamily: 'var(--font-bangers)', textShadow: '4px 4px 0 rgba(180,0,0,.25)', animation: 'sfx-float 3.5s ease-in-out infinite' }}
+          >
+            EXECUTE!
+          </div>
+        </div>
+      </section>
+
+      {/* ══════ THE PROTAGONIST ══════ */}
+      <section id="ch01" className="bg-[#F5F0E8] border-b-4 border-[#0a0a0a]">
+        <div className="chapter-bar">
+          <span className="chapter-num">CH.01</span>
+          <div className="flex-1 h-px bg-white/15" />
+          <span className="chapter-title">The Protagonist</span>
+        </div>
+
+        <div className="grid grid-cols-[1fr_320px] grid-rows-[auto_auto] gap-1 p-1 bg-[#0a0a0a]">
+          {/* Bio panel */}
+          <div ref={addRevealRef} className="manga-reveal row-span-2 manga-panel p-11 relative overflow-hidden">
+            <div className="halftone-overlay" />
+            <div className="relative z-[1]">
+              <div className="bg-[#0a0a0a] text-white text-[11px] tracking-[0.3em] uppercase py-1.5 px-3.5 inline-block mb-7" style={{ fontFamily: 'var(--font-bangers)' }}>
+                Subject Profile — Analysis Active
               </div>
 
-              <div className="relative border border-outline-variant bg-white p-1">
-                <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-outline-variant">
-                  <a href="https://github.com/suryansh-sharma420" target="_blank" rel="noopener noreferrer" className="p-6 hover:bg-surface-container transition-all group flex flex-col gap-2">
-                    <div className="flex items-center gap-2">
-                      <span className="material-symbols-outlined text-[14px] text-on-surface-variant">terminal</span>
-                      <span className="font-space-grotesk text-[9px] uppercase tracking-[0.2em] font-bold text-on-surface-variant/60">GitHub</span>
-                    </div>
-                    <span className="font-space-grotesk text-sm font-bold text-on-surface tracking-tight group-hover:text-primary-container transition-colors">github.com/suryansh-sharma420</span>
-                  </a>
+              <h2
+                className="text-[clamp(44px,5vw,68px)] tracking-[0.03em] leading-[0.9] text-[#0a0a0a] uppercase mb-8"
+                style={{ fontFamily: 'var(--font-bangers)' }}
+              >
+                Who Is<br />This Guy?
+              </h2>
 
-                  <a href="https://linkedin.com/in/suryansh-sharma-7b8302293" target="_blank" rel="noopener noreferrer" className="p-6 hover:bg-surface-container transition-all group flex flex-col gap-2">
-                    <div className="flex items-center gap-2">
-                      <span className="material-symbols-outlined text-[14px] text-on-surface-variant">database</span>
-                      <span className="font-space-grotesk text-[9px] uppercase tracking-[0.2em] font-bold text-on-surface-variant/60">LinkedIn</span>
-                    </div>
-                    <span className="font-space-grotesk text-sm font-bold text-on-surface tracking-tight group-hover:text-primary-container transition-colors">in/suryansh-sharma-7b8302293</span>
-                  </a>
+              {/* Speech bubble 1 */}
+              <div className="relative bg-white border-[3px] border-[#0a0a0a] p-5 mb-5">
+                <div className="absolute left-7 -top-4 w-0 h-0 border-l-[13px] border-l-transparent border-r-[13px] border-r-transparent border-b-[16px] border-b-[#0a0a0a]" />
+                <div className="absolute left-[31px] -top-2.5 w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-b-[12px] border-b-white" />
+                <p className="font-space-grotesk text-[15px] leading-[1.75] text-[#0a0a0a]">
+                  Final-year B.Tech CSE student and Software Engineer. Passionate about building scalable, production-ready AI applications that solve real-world problems. Works at the intersection of <strong>Deep Learning, Generative AI</strong>, and core Software Development.
+                </p>
+              </div>
 
-                  <a href="mailto:ssuryansh7003@gmail.com" className="p-6 hover:bg-surface-container transition-all group flex flex-col gap-2">
-                    <div className="flex items-center gap-2">
-                      <span className="material-symbols-outlined text-[14px] text-on-surface-variant">alternate_email</span>
-                      <span className="font-space-grotesk text-[9px] uppercase tracking-[0.2em] font-bold text-on-surface-variant/60">Email</span>
-                    </div>
-                    <span className="font-space-grotesk text-sm font-bold text-on-surface tracking-tight group-hover:text-primary-container transition-colors">ssuryansh7003@gmail.com</span>
-                  </a>
+              {/* Speech bubble 2 */}
+              <div className="relative bg-[#F5F0E8] border-[3px] border-[#0a0a0a] p-5 mb-9">
+                <p className="font-space-grotesk text-[15px] leading-[1.75] text-[#0a0a0a]">
+                  Currently at <strong>Tech Mahindra</strong> — architecting GCP-based RAG workflows and red teaming foundation models. Previously at <strong>Naxxatra Sciences</strong> — developed a CNN achieving <strong className="text-[#CC1111]">99% accuracy</strong> in MRI classification.
+                </p>
+              </div>
+
+              {/* Stats grid */}
+              <div className="grid grid-cols-2 gap-[3px] border-[3px] border-[#0a0a0a] overflow-hidden">
+                <div className="bg-[#0a0a0a] text-white p-4.5 text-center">
+                  <div className="text-[38px] tracking-[0.05em] leading-none text-[#FFD700]" style={{ fontFamily: 'var(--font-bangers)' }}>8.36</div>
+                  <div className="font-space-grotesk text-[10px] font-semibold tracking-[0.2em] uppercase text-white/55 mt-1">GPA / 10</div>
+                </div>
+                <div className="bg-white border-l-[3px] border-[#0a0a0a] p-4.5 text-center">
+                  <div className="text-[38px] tracking-[0.05em] leading-none text-[#CC1111]" style={{ fontFamily: 'var(--font-bangers)' }}>AI/ML</div>
+                  <div className="font-space-grotesk text-[10px] font-semibold tracking-[0.2em] uppercase text-black/45 mt-1">Focus Area</div>
+                </div>
+                <div className="bg-white border-t-[3px] border-[#0a0a0a] p-4.5 text-center">
+                  <div className="text-[38px] tracking-[0.05em] leading-none text-[#0a0a0a]" style={{ fontFamily: 'var(--font-bangers)' }}>4+</div>
+                  <div className="font-space-grotesk text-[10px] font-semibold tracking-[0.2em] uppercase text-black/45 mt-1">Projects</div>
+                </div>
+                <div className="bg-[#CC1111] border-t-[3px] border-l-[3px] border-[#0a0a0a] p-4.5 text-center">
+                  <div className="text-[34px] tracking-[0.05em] leading-none text-white" style={{ fontFamily: 'var(--font-bangers)' }}>&infin;</div>
+                  <div className="font-space-grotesk text-[10px] font-semibold tracking-[0.2em] uppercase text-white/80 mt-1">Improvement</div>
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="lg:col-span-5 relative group">
-            <div className="relative border border-outline-variant p-2 overflow-hidden bg-white">
+          {/* Photo panel */}
+          <div ref={addRevealRef} className="manga-reveal bg-[#0a0a0a] border-[3px] border-[#0a0a0a] overflow-hidden">
+            <div className="manga-photo h-[320px] relative">
               <Image
+                src="/images/IMG-20260613-WA0194.jpg"
                 alt="Suryansh Sharma"
-                className="w-full aspect-square object-cover grayscale transition-all duration-700 group-hover:grayscale-0 group-hover:scale-105"
-                src="/suryansh_profile.png"
-                width={800}
-                height={800}
+                fill
+                className="object-cover object-top"
+                style={{ filter: 'grayscale(100%) contrast(1.3) brightness(0.88)' }}
                 unoptimized
               />
             </div>
-          </div>
-        </section>
-
-        {/* Experience Section */}
-        <section className="space-y-16">
-          <div className="flex flex-col md:flex-row gap-16">
-            <div className="md:w-1/3">
-              <h2 className="font-space-grotesk text-4xl font-bold text-on-surface sticky top-32">
-                <span className="text-on-surface-variant font-light">01_</span><br/>
-                {mode === 'technical' ? 'Experience' : 'The Experience'}
-              </h2>
+            <div className="p-3.5 px-4 bg-[#0a0a0a]">
+              <div className="text-base tracking-[0.1em] text-white uppercase" style={{ fontFamily: 'var(--font-bangers)' }}>B.Tech CSE</div>
+              <div className="font-space-grotesk text-[10px] font-semibold tracking-[0.15em] uppercase text-[#CC1111] mt-0.5">Protagonist</div>
             </div>
-            <div className="md:w-2/3 space-y-12">
-              <div className="space-y-8 text-lg text-on-surface-variant leading-relaxed">
-                <p>
-                  My journey is defined by the intersection of <span className="text-on-surface font-medium">AI and SDE</span> and industrial-grade implementation. I engineer systems that handle complexity at scale, from high-load billing engines to security testing frameworks.
-                </p>
+          </div>
 
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4">
-                  {[
-                    { label: 'Foundation', value: 'B.Tech CSE' },
-                    { label: 'GPA', value: '8.36 / 10' },
-                    { label: 'Focus', value: 'AI/ML Systems' },
-                    { label: 'Mission', value: 'Infinite Improvement' }
-                  ].map(item => (
-                    <div key={item.label} className="border border-outline-variant p-4 relative bg-white">
-                      <div className="font-space-grotesk text-[9px] text-on-surface-variant mb-1 tracking-widest uppercase">{item.label}</div>
-                      <div className="text-on-surface font-bold uppercase text-xs tracking-tight">{item.value}</div>
-                    </div>
-                  ))}
+          {/* Contact panel */}
+          <div ref={addRevealRef} className="manga-reveal bg-[#F5F0E8] border-[3px] border-[#0a0a0a] p-5 flex flex-col gap-2.5 justify-center">
+            <div className="text-xs tracking-[0.25em] uppercase text-black/35 mb-1" style={{ fontFamily: 'var(--font-bangers)' }}>Contact Intel</div>
+            <a href="https://github.com/suryansh-sharma420" target="_blank" rel="noopener noreferrer" className="font-space-grotesk text-xs font-semibold text-[#0a0a0a] border-b-2 border-black/20 pb-2 block">
+              github.com/suryansh-sharma420
+            </a>
+            <a href="https://linkedin.com/in/suryansh-sharma-7b8302293" target="_blank" rel="noopener noreferrer" className="font-space-grotesk text-xs font-semibold text-[#0a0a0a] border-b-2 border-black/20 pb-2 block">
+              in/suryansh-sharma-7b8302293
+            </a>
+            <a href="mailto:ssuryansh7003@gmail.com" className="font-space-grotesk text-xs font-bold text-[#CC1111] block">
+              ssuryansh7003@gmail.com
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* ══════ BATTLE RECORD ══════ */}
+      <section className="bg-[#F5F0E8] border-b-4 border-[#0a0a0a]">
+        <div className="chapter-bar">
+          <span className="chapter-num">Battle Record</span>
+          <div className="flex-1 h-px bg-white/15" />
+          <span className="chapter-title">Experience</span>
+        </div>
+
+        <div className="flex flex-col gap-1 p-1 bg-[#0a0a0a]">
+          {experience.map((exp, i) => (
+            <div key={i} ref={addRevealRef} className="manga-reveal bg-white border-[3px] border-[#0a0a0a] overflow-hidden">
+              <div className="bg-[#0a0a0a] py-3.5 px-7 flex justify-between items-center">
+                <span className="text-[26px] tracking-[0.06em] text-white uppercase" style={{ fontFamily: 'var(--font-bangers)' }}>
+                  {exp.company}
+                </span>
+                <span className="text-[15px] tracking-[0.1em] text-[#CC1111]" style={{ fontFamily: 'var(--font-bangers)' }}>
+                  {exp.date}
+                </span>
+              </div>
+              <div className="py-7 px-8 relative overflow-hidden">
+                <div className="absolute inset-0 pointer-events-none" style={{ background: 'repeating-conic-gradient(from 0deg at 100% 0%, rgba(0,0,0,.025) 0deg 1deg, transparent 1deg 14deg)' }} />
+                <div className="relative z-[1]">
+                  <div className="text-sm tracking-[0.22em] text-[#CC1111] uppercase mb-3.5" style={{ fontFamily: 'var(--font-bangers)' }}>
+                    {exp.role}
+                  </div>
+                  <p className="font-space-grotesk text-[15px] leading-[1.8] text-[#0a0a0a] max-w-[720px]">
+                    {exp.description}
+                  </p>
                 </div>
               </div>
+            </div>
+          ))}
+        </div>
+      </section>
 
-              <div className="space-y-6">
-                {[
-                  {
-                    company: 'Tech Mahindra',
-                    role: 'Associate Analyst // GenAI',
-                    date: 'FEB 2026 - PRESENT',
-                    description: 'Architecting GCP-based RAG workflows and autonomous data extraction systems. Performing adversarial red teaming on foundation models.'
-                  },
-                  {
-                    company: 'Naxxatra Sciences',
-                    role: 'Data Science & ML Intern',
-                    date: 'JUNE - AUG 2025',
-                    description: 'Developed a scientific imaging CNN achieving 99% accuracy in MRI classification. Engineered robust end-to-end data pipelines.'
-                  }
-                ].map((exp, i) => (
-                  <div key={i} className="border border-outline-variant p-8 relative border-l-2 border-l-primary-container hover:bg-surface-container transition-all group bg-white">
-                    <div className="flex justify-between items-start mb-2">
-                      <h3 className="font-space-grotesk text-xl font-bold uppercase text-on-surface tracking-tight">{exp.company}</h3>
-                      <span className="font-space-grotesk text-[10px] text-on-surface-variant tracking-widest">{exp.date}</span>
-                    </div>
-                    <p className="text-on-surface-variant font-space-grotesk text-[11px] uppercase tracking-widest mb-4 font-bold">{exp.role}</p>
-                    <p className="text-sm text-on-surface-variant font-body leading-relaxed max-w-xl">{exp.description}</p>
+      {/* ══════ SPECIAL MOVES ══════ */}
+      <section className="bg-[#F5F0E8] border-b-4 border-[#0a0a0a]">
+        <div className="chapter-bar">
+          <span className="chapter-num">Special Moves</span>
+          <div className="flex-1 h-px bg-white/15" />
+          <span className="chapter-title">Skills</span>
+        </div>
+
+        <div className="p-1 bg-[#0a0a0a]">
+          <div ref={addRevealRef} className="manga-reveal manga-panel p-11 relative overflow-hidden">
+            {/* BG SFX */}
+            <div
+              className="absolute top-4 right-8 text-[80px] text-black/[0.055] leading-none pointer-events-none tracking-[0.04em]"
+              style={{ fontFamily: 'var(--font-bangers)', transform: 'rotate(-8deg)' }}
+            >
+              MASTERED!
+            </div>
+
+            <div className="text-xs tracking-[0.28em] uppercase text-black/35 mb-9" style={{ fontFamily: 'var(--font-bangers)' }}>
+              Technical Power — Live Readings
+            </div>
+
+            <div className="flex flex-col gap-5">
+              {skills.map((skill) => (
+                <div key={skill.name} className="grid grid-cols-[220px_1fr_44px] items-center gap-4">
+                  <span className="text-lg tracking-[0.05em] text-[#0a0a0a] uppercase" style={{ fontFamily: 'var(--font-bangers)' }}>
+                    {skill.name}
+                  </span>
+                  <div className="h-3.5 border-2 border-[#0a0a0a] bg-[#F5F0E8] relative overflow-hidden">
+                    <div
+                      className="absolute top-0 bottom-0 left-0 bg-[#0a0a0a] transition-all duration-[1.4s]"
+                      style={{ width: `${skill.pct}%`, transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)' }}
+                    />
                   </div>
-                ))}
+                  <span className="text-xl text-[#CC1111] text-right leading-none" style={{ fontFamily: 'var(--font-bangers)' }}>
+                    {skill.pct}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ══════ CONNECT ══════ */}
+      <section className="bg-[#F5F0E8]">
+        <div className="chapter-bar">
+          <span className="chapter-num">Final Chapter</span>
+          <div className="flex-1 h-px bg-white/15" />
+          <span className="chapter-title">Connect</span>
+        </div>
+
+        <div className="p-1 bg-[#0a0a0a]">
+          <div ref={addRevealRef} className="manga-reveal manga-panel p-[90px_60px] relative overflow-hidden text-center min-h-[500px] flex items-center justify-center">
+            {/* Speed lines from center */}
+            <div className="absolute inset-0 pointer-events-none" style={{ background: 'repeating-conic-gradient(from 0deg at 50% 50%, rgba(0,0,0,.07) 0deg 1.2deg, transparent 1.2deg 10deg)' }} />
+            {/* White radial center */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[480px] h-[480px] pointer-events-none z-0" style={{ background: 'radial-gradient(circle, rgba(255,255,255,1) 28%, transparent 72%)' }} />
+
+            <div className="relative z-[1]">
+              <div
+                className="text-[clamp(80px,12vw,160px)] leading-[0.85] tracking-[0.03em] text-[#0a0a0a] uppercase mb-2"
+                style={{ fontFamily: 'var(--font-bangers)', textShadow: '5px 5px 0 rgba(0,0,0,.1)' }}
+              >
+                CONNECT!
+              </div>
+              <div className="text-2xl tracking-[0.18em] text-[#CC1111] mb-11 uppercase" style={{ fontFamily: 'var(--font-bangers)' }}>
+                Let&apos;s Build Something Great
+              </div>
+
+              {/* Email - visible, clickable, copyable */}
+              <div className="mb-8 flex flex-col items-center gap-2">
+                <a
+                  href="mailto:ssuryansh7003@gmail.com"
+                  className="font-space-grotesk text-lg font-bold text-[#0a0a0a] hover:text-[#CC1111] transition-colors select-all"
+                >
+                  ssuryansh7003@gmail.com
+                </a>
+                <button
+                  onClick={handleCopyEmail}
+                  className="font-space-grotesk text-[10px] font-semibold tracking-[0.15em] uppercase text-black/40 hover:text-[#CC1111] transition-colors flex items-center gap-1"
+                >
+                  <span className="material-symbols-outlined text-sm">{copied ? 'check' : 'content_copy'}</span>
+                  {copied ? 'Copied!' : 'Copy Email'}
+                </button>
+              </div>
+
+              <div className="flex justify-center gap-3 flex-wrap mb-11">
+                <a
+                  href="mailto:ssuryansh7003@gmail.com"
+                  className="text-lg tracking-[0.12em] uppercase text-white bg-[#0a0a0a] py-3.5 px-9 inline-block border-[3px] border-[#0a0a0a]"
+                  style={{ fontFamily: 'var(--font-bangers)' }}
+                >
+                  Send Message
+                </a>
+                <a
+                  href="/SURYANSH_SHARMA.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-lg tracking-[0.12em] uppercase text-[#CC1111] bg-white py-3.5 px-9 inline-block border-[3px] border-[#CC1111]"
+                  style={{ fontFamily: 'var(--font-bangers)' }}
+                >
+                  View R&eacute;sum&eacute;
+                </a>
+              </div>
+
+              <div className="flex justify-center gap-9 mb-14">
+                <a href="https://github.com/suryansh-sharma420" target="_blank" rel="noopener noreferrer" className="font-space-grotesk text-xs font-semibold tracking-[0.18em] uppercase text-[#0a0a0a] border-b-2 border-[#0a0a0a] pb-1">
+                  GitHub
+                </a>
+                <a href="https://linkedin.com/in/suryansh-sharma-7b8302293" target="_blank" rel="noopener noreferrer" className="font-space-grotesk text-xs font-semibold tracking-[0.18em] uppercase text-[#0a0a0a] border-b-2 border-[#0a0a0a] pb-1">
+                  LinkedIn
+                </a>
+                <a href="mailto:ssuryansh7003@gmail.com" className="font-space-grotesk text-xs font-semibold tracking-[0.18em] uppercase text-[#CC1111] border-b-2 border-[#CC1111] pb-1">
+                  Email
+                </a>
               </div>
             </div>
           </div>
-        </section>
-
-        {/* Skills Section */}
-        <section className="py-20">
-          <div className="text-center mb-16 space-y-4">
-            <span className="text-on-surface-variant font-space-grotesk text-sm tracking-[0.5em] block uppercase">Core Stack</span>
-            <h2 className="font-space-grotesk text-4xl font-bold text-on-surface uppercase tracking-tight">Technical Capabilities</h2>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[
-              { icon: 'hub', title: 'Full-Stack Development', desc: 'Building with React.js, Next.js, FastAPI and Postgres.' },
-              { icon: 'memory', title: 'RAG Pipelines', desc: 'Advanced Retrieval Augmented Generation with vector databases and semantic search.' },
-              { icon: 'security', title: 'LLM Safety', desc: 'Adversarial testing and alignment for foundation models to prevent hallucinations.' },
-              { icon: 'bolt', title: 'FastAPI', desc: 'Ultra-fast asynchronous REST APIs with strict Pydantic validation.' },
-              { icon: 'model_training', title: 'PyTorch', desc: 'Custom neural network design and efficient GPU training orchestration.' },
-              { icon: 'monitoring', title: 'System Design', desc: 'Technical leadership focused on ROI and sustainable engineering practices.' }
-            ].map((skill, i) => (
-              <div key={i} className="bg-white border border-outline-variant p-8 relative border-l-2 border-l-primary-container/30 hover:border-l-primary-container transition-all group">
-                <span className="material-symbols-outlined text-on-surface-variant mb-6 text-4xl group-hover:text-primary-container transition-colors">{skill.icon}</span>
-                <h3 className="font-space-grotesk text-lg font-bold text-on-surface mb-3 uppercase tracking-tight">{skill.title}</h3>
-                <p className="text-on-surface-variant text-sm font-body leading-relaxed">{skill.desc}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-      </main>
+        </div>
+      </section>
 
       <Footer />
     </div>
