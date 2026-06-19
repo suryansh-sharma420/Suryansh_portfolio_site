@@ -2,63 +2,73 @@
 
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import { useMode } from '@/context/ModeContext';
 
 export default function BlogPage() {
-  const { mode } = useMode();
-
   return (
-    <div className="min-h-screen pt-28 pb-12 flex flex-col">
+    <div className="min-h-screen flex flex-col">
       <Navbar />
 
-      <main className="max-w-6xl mx-auto px-6 flex-grow flex flex-col justify-center w-full py-20">
-        <header className="mb-20 text-center space-y-4">
-          <span className="font-space-grotesk text-on-surface-variant text-xs tracking-[0.3em] uppercase block">
-            {mode === 'technical' ? 'Data Stream' : 'Future Insights'}
-          </span>
-          <h1 className="font-space-grotesk text-5xl md:text-8xl font-bold tracking-tighter text-on-surface">
-            Coming Soon
-          </h1>
-        </header>
+      {/* Chapter header */}
+      <div className="pt-14 bg-[#F5F0E8] border-b-4 border-[#0a0a0a]">
+        <div className="chapter-bar">
+          <span className="chapter-num">Side Story</span>
+          <div className="flex-1 h-px bg-white/15" />
+          <span className="chapter-title">The Blog</span>
+        </div>
+      </div>
 
-        <section className="flex flex-col items-center justify-center space-y-16">
-          <div className="relative">
-            <div className="w-24 h-24 border border-outline-variant flex items-center justify-center bg-surface-container">
-              <span className="material-symbols-outlined text-4xl text-on-surface-variant">sensors</span>
-            </div>
-          </div>
+      <main className="bg-[#0a0a0a] flex-grow">
+        <div className="p-1">
+          <div className="manga-panel relative overflow-hidden min-h-[70vh] flex flex-col items-center justify-center p-12">
+            {/* Speed lines from center */}
+            <div className="absolute inset-0 pointer-events-none" style={{ background: 'repeating-conic-gradient(from 0deg at 50% 50%, rgba(0,0,0,.05) 0deg 1.2deg, transparent 1.2deg 10deg)' }} />
+            {/* White radial center */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] pointer-events-none z-0" style={{ background: 'radial-gradient(circle, rgba(255,255,255,1) 28%, transparent 72%)' }} />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full opacity-30">
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="border border-outline-variant border-dashed p-8 relative bg-white">
-                <div className="h-4 w-2/3 bg-surface-container-high mb-4"></div>
-                <div className="h-4 w-full bg-surface-container mb-2"></div>
-                <div className="h-4 w-1/2 bg-surface-container"></div>
-                <div className="mt-8 flex justify-between items-center">
-                  <div className="h-2 w-12 bg-surface-container-high"></div>
-                  <div className="h-2 w-8 bg-surface-container"></div>
+            <div className="relative z-[1] text-center space-y-8">
+              <div
+                className="text-[clamp(60px,10vw,120px)] leading-[0.85] tracking-[0.03em] text-[#0a0a0a] uppercase"
+                style={{ fontFamily: 'var(--font-bangers)', textShadow: '4px 4px 0 rgba(0,0,0,.08)' }}
+              >
+                Coming<br />Soon!
+              </div>
+
+              <div className="text-xl tracking-[0.18em] text-[#CC1111] uppercase" style={{ fontFamily: 'var(--font-bangers)' }}>
+                This chapter is being written...
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3 w-full max-w-2xl mx-auto opacity-30">
+                {[1, 2, 3].map((i) => (
+                  <div key={i} className="border-[3px] border-[#0a0a0a] border-dashed p-6 bg-[#F5F0E8]">
+                    <div className="h-3 w-2/3 bg-[#0a0a0a]/10 mb-3"></div>
+                    <div className="h-3 w-full bg-[#0a0a0a]/5 mb-2"></div>
+                    <div className="h-3 w-1/2 bg-[#0a0a0a]/5"></div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="max-w-md w-full mx-auto border-[3px] border-[#0a0a0a] p-8 bg-white space-y-5">
+                <div className="text-center">
+                  <h3 className="text-2xl uppercase tracking-[0.08em]" style={{ fontFamily: 'var(--font-bangers)' }}>Stay Updated</h3>
+                  <p className="font-space-grotesk text-sm text-black/45">Get notified when the blog goes live.</p>
+                </div>
+                <div className="space-y-3">
+                  <input
+                    type="email"
+                    placeholder="Enter your email"
+                    className="w-full bg-[#F5F0E8] border-[2px] border-[#0a0a0a] px-4 py-3 font-space-grotesk text-sm focus:border-[#CC1111] outline-none transition-all text-[#0a0a0a]"
+                  />
+                  <button
+                    className="w-full py-3.5 bg-[#0a0a0a] text-white text-lg uppercase tracking-[0.12em] hover:bg-[#CC1111] active:scale-95 transition-all border-[2px] border-[#0a0a0a] hover:border-[#CC1111]"
+                    style={{ fontFamily: 'var(--font-bangers)' }}
+                  >
+                    Notify Me
+                  </button>
                 </div>
               </div>
-            ))}
-          </div>
-
-          <div className="max-w-md w-full border border-outline-variant p-8 space-y-6 bg-white">
-            <div className="text-center">
-              <h3 className="font-space-grotesk text-xl font-bold uppercase tracking-tight">Stay Updated</h3>
-              <p className="text-sm text-on-surface-variant font-body">Get notified when the blog goes live.</p>
-            </div>
-            <div className="space-y-3">
-              <input
-                type="email"
-                placeholder="Enter your email"
-                className="w-full bg-surface-container border border-outline-variant px-4 py-3 font-space-grotesk text-sm focus:border-primary-container outline-none transition-all text-on-surface"
-              />
-              <button className="w-full py-4 bg-primary-container text-on-primary font-space-grotesk font-bold uppercase tracking-widest text-xs hover:opacity-90 active:scale-95 transition-all">
-                Notify Me
-              </button>
             </div>
           </div>
-        </section>
+        </div>
       </main>
 
       <Footer />
