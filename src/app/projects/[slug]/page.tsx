@@ -32,7 +32,7 @@ export default function ProjectDrillDown({ params }: { params: Promise<{ slug: s
       <main className="bg-[#0a0a0a] flex-grow">
         {/* Back link + header */}
         <div className="p-1">
-          <div className="manga-panel p-8 relative overflow-hidden">
+          <div className="manga-panel p-4 sm:p-8 relative overflow-hidden">
             <div className="halftone-overlay" />
             <div className="relative z-[1]">
               <div className="flex items-center justify-between mb-8">
@@ -85,9 +85,9 @@ export default function ProjectDrillDown({ params }: { params: Promise<{ slug: s
 
         {/* Metrics */}
         <div className="p-1 pt-0">
-          <div className="flex gap-[2px] bg-[#0a0a0a] border-[3px] border-[#0a0a0a] overflow-hidden">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-[2px] bg-[#0a0a0a] border-[3px] border-[#0a0a0a] overflow-hidden">
             {project.metrics.map((m, i) => (
-              <div key={i} className="flex-1 py-6 px-4 text-center bg-white">
+              <div key={i} className="py-4 sm:py-6 px-3 sm:px-4 text-center bg-white">
                 <div className="text-4xl text-[#CC1111] leading-none" style={{ fontFamily: 'var(--font-bangers)' }}>{m.value}</div>
                 <div className="font-space-grotesk text-[10px] font-semibold tracking-[0.15em] uppercase text-black/38 mt-1">{m.label}</div>
               </div>
@@ -97,7 +97,7 @@ export default function ProjectDrillDown({ params }: { params: Promise<{ slug: s
 
         {/* 5-point summary */}
         <div className="p-1 pt-0">
-          <div className="manga-panel p-8 relative overflow-hidden">
+          <div className="manga-panel p-4 sm:p-8 relative overflow-hidden">
             <div className="halftone-overlay" />
             <div className="relative z-[1]">
               <div className="text-sm tracking-[0.2em] text-[#CC1111] uppercase mb-6" style={{ fontFamily: 'var(--font-bangers)' }}>Mission Summary</div>
@@ -117,7 +117,7 @@ export default function ProjectDrillDown({ params }: { params: Promise<{ slug: s
 
         {/* Detailed description */}
         <div className="p-1 pt-0">
-          <div className="manga-panel p-8 relative overflow-hidden">
+          <div className="manga-panel p-4 sm:p-8 relative overflow-hidden">
             <div className="halftone-overlay" />
             <div className="relative z-[1]">
               <div className="text-sm tracking-[0.2em] text-[#CC1111] uppercase mb-6" style={{ fontFamily: 'var(--font-bangers)' }}>
@@ -135,7 +135,7 @@ export default function ProjectDrillDown({ params }: { params: Promise<{ slug: s
         {/* What I learned */}
         {project.learned && (
           <div className="p-1 pt-0">
-            <div className="manga-panel p-8">
+            <div className="manga-panel p-4 sm:p-8">
               <div className="text-sm tracking-[0.2em] text-[#CC1111] uppercase mb-6" style={{ fontFamily: 'var(--font-bangers)' }}>
                 Lessons Learned
               </div>
@@ -155,7 +155,7 @@ export default function ProjectDrillDown({ params }: { params: Promise<{ slug: s
 
         {/* Architecture Graph */}
         <div className="p-1 pt-0">
-          <div className="manga-panel p-8">
+          <div className="manga-panel p-4 sm:p-8">
             <div className="text-sm tracking-[0.2em] text-[#CC1111] uppercase mb-6" style={{ fontFamily: 'var(--font-bangers)' }}>Architecture</div>
             <ArchitectureGraph nodes={project.graphNodes} edges={project.graphEdges} />
           </div>
@@ -163,7 +163,7 @@ export default function ProjectDrillDown({ params }: { params: Promise<{ slug: s
 
         {/* Links */}
         <div className="p-1 pt-0 pb-1">
-          <div className="manga-panel p-6 flex gap-3 flex-wrap">
+          <div className="manga-panel p-4 sm:p-6 flex flex-col sm:flex-row gap-3 flex-wrap">
             {project.githubUrl && (
               <a
                 href={project.githubUrl}

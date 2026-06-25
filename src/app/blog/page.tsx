@@ -19,7 +19,7 @@ export default function BlogPage() {
 
       <main className="bg-[#0a0a0a] flex-grow">
         <div className="p-1">
-          <div className="manga-panel relative overflow-hidden min-h-[70vh] flex flex-col items-center justify-center p-12">
+          <div className="manga-panel relative overflow-hidden min-h-[70vh] flex flex-col items-center justify-center p-5 sm:p-12">
             {/* Speed lines from center */}
             <div className="absolute inset-0 pointer-events-none" style={{ background: 'repeating-conic-gradient(from 0deg at 50% 50%, rgba(0,0,0,.05) 0deg 1.2deg, transparent 1.2deg 10deg)' }} />
             {/* White radial center */}

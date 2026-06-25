@@ -114,7 +114,13 @@
 
   .chapter-bar {
     @apply bg-primary-container flex items-center gap-5;
-    padding: 16px 40px;
+    padding: 12px 16px;
+  }
+
+  @media (min-width: 640px) {
+    .chapter-bar {
+      padding: 16px 40px;
+    }
   }
 
   .chapter-bar .chapter-num {
@@ -124,7 +130,7 @@
 
   .chapter-bar .chapter-title {
     font-family: var(--font-bangers), cursive;
-    @apply text-[30px] tracking-[0.1em] text-white uppercase;
+    @apply text-xl sm:text-[30px] tracking-[0.1em] text-white uppercase;
   }
 
   .corner-bracket-tl {
