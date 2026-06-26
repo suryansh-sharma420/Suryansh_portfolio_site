@@ -15,7 +15,7 @@ export default function Navbar() {
   ];
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-[200] bg-white border-b-[3px] border-[#0a0a0a] px-8 h-14 flex items-center justify-between">
+    <nav className="fixed top-0 left-0 right-0 z-[200] bg-white border-b-[3px] border-[#0a0a0a] px-4 sm:px-8 h-14 flex items-center justify-between">
       <div className="font-[var(--font-bangers)] text-xl tracking-[0.08em] text-[#0a0a0a]" style={{ fontFamily: 'var(--font-bangers)' }}>
         SURYANSH SHARMA
       </div>
